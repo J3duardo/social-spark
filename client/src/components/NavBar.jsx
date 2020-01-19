@@ -14,7 +14,8 @@ const styles = {
     margin: "0 auto"
   },
   navBarTitle: {
-    flexGrow: "1"
+    flexGrow: "1",
+    color: "inherit"
   }
 }
 
@@ -23,7 +24,14 @@ class NavBar extends Component {
     return (
       <AppBar position="fixed">
         <Toolbar className={this.props.classes.toolBar}>
-          <Typography variant="h6" className={this.props.classes.navBarTitle}>Social Spark</Typography>
+          <Typography
+            className={this.props.classes.navBarTitle}
+            variant="h6"
+            component={Link}
+            to="/"
+          >
+            Social Spark
+          </Typography>
           <Button color="inherit" component={Link} to="/">Home</Button>
           <Button color="inherit" component={Link} to="/login">Login</Button>
           <Button color="inherit" component={Link} to="/signup">Signup</Button>
