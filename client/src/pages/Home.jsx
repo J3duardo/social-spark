@@ -39,7 +39,7 @@ class Home extends Component {
     }
 
     return (
-      <Grid container spacing={1} className={this.props.classes.gridContainer}>
+      <Grid container spacing={2} className={this.props.classes.gridContainer}>
         <Grid item sm={8} xs={12}>
           {renderPosts()}
         </Grid>
