@@ -104,10 +104,11 @@ exports.userSignup = async (req, res) => {
       })
     }
   } catch (error) {
-    if(error.code.includes("auth/email")) {
+    if(error.code && error.code.includes("auth")) {
       return res.status(400).json({
         status: "failed",
-        message: "Email already in use"
+        message: "Wrong credentials",
+        data: error.code
       })
     }
 
@@ -163,10 +164,11 @@ exports.userLogin = async (req, res) => {
       }
     })
   } catch (error) {
-    if(error.code.includes("auth")) {
+    if(error.code && error.code.includes("auth")) {
       return res.status(400).json({
         status: "failed",
-        message: "Wrong credentials"
+        message: "Wrong credentials",
+        data: error.code
       })
     }
 
