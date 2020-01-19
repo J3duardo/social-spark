@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
+import {withStyles} from "@material-ui/styles";
 import Post from "../components/Post";
+
+const styles = {
+  gridContainer: {
+    padding: "0 24px"
+  }
+}
 
 class Home extends Component {
   state = {
@@ -32,7 +39,7 @@ class Home extends Component {
     }
 
     return (
-      <Grid container>
+      <Grid container spacing={1} className={this.props.classes.gridContainer}>
         <Grid item sm={8} xs={12}>
           {renderPosts()}
         </Grid>
@@ -44,4 +51,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default withStyles(styles)(Home);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 import {withStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -9,8 +9,7 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = {
   card: {
-    display: "flex",
-    margin: "0 20px 20px 0"
+    display: "flex"
   },
   image: {
     minWidth: "200px"
