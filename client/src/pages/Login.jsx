@@ -59,11 +59,13 @@ class Login extends Component {
           password: this.state.password
         }
       });
-
-      console.log(response);      
+      
+      localStorage.setItem("token", `Bearer ${response.data.data.token}`);
+      
       this.setState({
         loading: false
       });
+
       this.props.history.push("/");
       
     } catch (error) {
