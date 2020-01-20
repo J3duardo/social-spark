@@ -6,7 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import axios from "axios";
+
+import {connect} from "react-redux";
+import {loginUser} from "../redux/actions/userActions";
+import { CLEAR_ERRORS } from "../redux/types";
 
 const styles = {
   form: {
@@ -39,106 +42,32 @@ const styles = {
 class Login extends Component {
   state = {
     email: "",
-    password: "",
-    loading: false,
-    errors: {}
+    password: ""
   }
 
   submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      this.setState({
-        loading: true
-      });
-
-      const response = await axios({
-        method: "POST",
-        url: "/login",
-        data: {
-          email: this.state.email,
-          password: this.state.password
-        }
-      });
-      
-      localStorage.setItem("token", `Bearer ${response.data.data.token}`);
-      
-      this.setState({
-        loading: false
-      });
-
-      this.props.history.push("/");
-      
-    } catch (error) {
-      console.log(error.response);
-      let apiError = null;
-
-      // Errores de campos requeridos
-      // En axios el objeto error.response.data es el error arrojado por la API
-      if(error.response) {
-        apiError = error.response.data
-      }
-
-      if(apiError && apiError.message.toLowerCase().includes("validation")) {
-        return this.setState({
-          loading: false,
-          errors: {
-            ...apiError.data.errors
-          }
-        })
-
-        // Errores de credenciales
-      } else if (apiError && apiError.message.includes("credentials")) {
-        // Error de intentos de login excedidos
-        if(apiError.data.includes("too-many-requests")) {
-          return this.setState({
-            loading: false,
-            errors: {
-              general: "Too many login attempts. Try again later."
-            }
-          })
-        }
-        
-        // Error de email inválido
-        if(apiError.data.includes("not-found")) {
-          return this.setState({
-            loading: false,
-            errors: {
-              email: "User doesn't exist"
-            }
-          })
-        }
-
-        // Error de contraseña equivocada
-        if(apiError.data.includes("password")) {
-          return this.setState({
-            loading: false,
-            errors: {
-              password: "Wrong password"
-            }
-          })
-        }
-      }
-
-      // Errores generados en el servidor
-      return this.setState({
-        loading: false,
-        errors: {
-          general: "Internal server error"
-        }
-      })
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
     }
+
+    this.props.login(userData, this.props.history)
   }
 
   onChangeHandler = (e) => {
+    if(this.props.errors) {
+      this.props.clearErrors()
+    };
+
     this.setState({
       [e.target.name]: e.target.value
     })
   }
 
   render() {
-    console.log(this.state.errors)
     const {classes} = this.props;
-    const {errors, loading} = this.state;
+    const errors = this.props.errors;
 
     return (
       <Grid container className={classes.form}>
@@ -158,8 +87,8 @@ class Login extends Component {
               className={classes.textField}
               value={this.state.email}
               onChange={this.onChangeHandler}
-              helperText={`${errors.email ? errors.email : ""}`}
-              error={errors.email ? true : false}
+              helperText={`${errors && errors.email ? errors.email : ""}`}
+              error={errors && errors.email ? true : false}
             />
             <TextField
               id="password"
@@ -170,10 +99,10 @@ class Login extends Component {
               className={classes.textField}
               value={this.state.password}
               onChange={this.onChangeHandler}
-              helperText={`${errors.password ? errors.password : ""}`}
-              error={errors.password ? true : false}
+              helperText={`${errors && errors.password ? errors.password : ""}`}
+              error={errors && errors.password ? true : false}
             />
-            {errors.general &&
+            {errors && errors.general &&
               <Typography variant="body2" className={classes.generalError}>
                 {errors.general}
               </Typography>
@@ -183,10 +112,10 @@ class Login extends Component {
               variant="contained"
               color="primary"
               className={classes.button}
-              disabled={loading}
+              disabled={this.props.loading}
             >
               Login
-              {loading &&
+              {this.props.loading &&
                 <CircularProgress
                   size="1.5rem"
                   thickness={6}
@@ -205,4 +134,22 @@ class Login extends Component {
   }
 }
 
-export default withStyles(styles)(Login);
+const mapStateToProps = (state) => {
+  return {
+    loading: state.ui.loading,
+    errors: state.ui.errors
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (data, history) => {
+      dispatch(loginUser(data, history))
+    },
+    clearErrors: () => {
+      dispatch({type: CLEAR_ERRORS})
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Login));

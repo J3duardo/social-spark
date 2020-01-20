@@ -10,6 +10,9 @@ import NavBar from "./components/NavBar";
 import jwtDecode from "jwt-decode";
 import AuthRoute from "./components/AuthRoute";
 
+import {Provider} from "react-redux";
+import store from "./redux/store";
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -42,20 +45,22 @@ const App = (props) => {
   }, []);
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <div>
-        <BrowserRouter>
-          <NavBar />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <AuthRoute exact isAuth={auth} path="/login" component={Login} />
-              <AuthRoute exact isAuth={auth} path="/signup" component={Signup} />
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </div>
-    </MuiThemeProvider>
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <div>
+          <BrowserRouter>
+            <NavBar />
+            <div className="container">
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <AuthRoute exact isAuth={auth} path="/login" component={Login} />
+                <AuthRoute exact isAuth={auth} path="/signup" component={Signup} />
+              </Switch>
+            </div>
+          </BrowserRouter>
+        </div>
+      </MuiThemeProvider>
+    </Provider>
   );
 }
 
