@@ -45,6 +45,12 @@ class Login extends Component {
     password: ""
   }
 
+  componentWillUnmount() {
+    if(this.props.errors) {
+      this.props.clearErrors()
+    }
+  }
+
   submitHandler = async (e) => {
     e.preventDefault();
     const userData = {
