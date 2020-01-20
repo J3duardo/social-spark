@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -7,51 +6,35 @@ import {withStyles} from "@material-ui/styles";
 import Post from "../components/Post";
 import Profile from "../components/Profile";
 
+import {connect} from "react-redux";
+import {getPosts} from "../redux/actions/dataActions";
+
 const styles = {
   gridContainer: {
     padding: "0 24px"
   }
 }
 
+
 class Home extends Component {
-  state = {
-    posts: [],
-    loading: false
-  };
-
-  async componentDidMount() {
-    this.setState({
-      loading: true
-    });
-
-    const response = await axios({
-      method: "GET",
-      url: "/posts"
-    });
-
-    this.setState({
-      posts: response.data.data,
-      loading: false
-    })
-  };
+  componentDidMount() {
+    this.props.getPosts()
+  }
 
   render() {
     const renderPosts = () => {
-      if(this.state.posts.length === 0 && this.state.loading) {
+      if(this.props.data.posts.length === 0 && this.props.data.loading) {
         return <Typography variant="h5">Loading...</Typography>
-      } else if(this.state.posts.length === 0 && !this.state.loading) {
+      } else if(this.props.data.posts.length === 0 && !this.props.data.loading) {
         return <Typography variant="h5">No posts found.</Typography>
       }
-      return this.state.posts.map((post) => {
+      return this.props.data.posts.map((post) => {
         return <Post key={post.id} post={post} />
       })
     }
 
     return (
       <div className={this.props.classes.wrapper}>
-        {this.state.loading &&
-          <LinearProgress/>
-        }
         <Grid container spacing={2} className={this.props.classes.gridContainer}>
           <Grid item sm={8} xs={12}>
             {renderPosts()}
@@ -65,4 +48,18 @@ class Home extends Component {
   }
 }
 
-export default withStyles(styles)(Home);
+const mapStateToProps = (state) => {
+  return {
+    data: state.data
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getPosts: () => {
+      dispatch(getPosts())
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Home));
