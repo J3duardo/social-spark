@@ -12,6 +12,9 @@ import AuthRoute from "./components/AuthRoute";
 
 import {Provider} from "react-redux";
 import store from "./redux/store";
+import {SET_AUTH, SET_ERRORS} from "./redux/types";
+import {logoutUser, getUserData} from "./redux/actions/userActions";
+import axios from "axios";
 
 const theme = createMuiTheme({
   palette: {
@@ -30,18 +33,26 @@ const theme = createMuiTheme({
   }
 })
 
-const App = (props) => {
-  const [token, setToken] = useState(null);
-  const [auth, setAuth] = useState(false);
-
+const App = () => {
   useEffect(() => {
+    // Chequear si hay token en el storage
     if(localStorage.getItem("token")) {
+      // Decodificar el token
       const decodedToken = jwtDecode(localStorage.getItem("token"))
-      setToken(decodedToken)
+      
+      // Chequear si el token ha expirado
       if(decodedToken.exp * 1000 > Date.now()) {
-        setAuth(true)
+        store.dispatch({type: SET_AUTH});
+        store.dispatch(getUserData());
+
+        axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+      } else {
+        store.dispatch(logoutUser());
       }
-    } else setAuth(false)
+      
+    } else {
+      store.dispatch(logoutUser());
+    }
   }, []);
 
   return (
@@ -53,8 +64,8 @@ const App = (props) => {
             <div className="container">
               <Switch>
                 <Route exact path="/" component={Home} />
-                <AuthRoute exact isAuth={auth} path="/login" component={Login} />
-                <AuthRoute exact isAuth={auth} path="/signup" component={Signup} />
+                <AuthRoute exact path="/login" component={Login} />
+                <AuthRoute exact path="/signup" component={Signup} />
               </Switch>
             </div>
           </BrowserRouter>
