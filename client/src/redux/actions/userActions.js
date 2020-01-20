@@ -257,3 +257,23 @@ export const getUserData = (history) => {
     }
   }
 }
+
+// Action para cambiar el avatar del usuario
+export const uploadImage = (formData) => {
+  return async (dispatch) => {
+    dispatch({type: LOADING_UI, payload: true});
+
+    try {
+      await axios({
+        method: "POST",
+        url: "/users/image",
+        data: formData
+      });
+  
+      dispatch(getUserData())
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
