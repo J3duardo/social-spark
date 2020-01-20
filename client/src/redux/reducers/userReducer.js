@@ -9,11 +9,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch(action.type) {
-    case SET_AUTH:
-      return {
-        ...state,
-        auth: true
-      }
     case SET_UNAUTH:
       return initialState
     case SET_USER:

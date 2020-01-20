@@ -42,10 +42,8 @@ const App = () => {
       
       // Chequear si el token ha expirado
       if(decodedToken.exp * 1000 > Date.now()) {
-        store.dispatch({type: SET_AUTH});
-        store.dispatch(getUserData());
-
         axios.defaults.headers.common["Authorization"] = localStorage.getItem("token");
+        store.dispatch(getUserData());
       } else {
         store.dispatch(logoutUser());
       }
