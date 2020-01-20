@@ -5,8 +5,10 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import {connect} from "react-redux";
 import { LinearProgress } from "@material-ui/core";
+
+import {connect} from "react-redux";
+import {logoutUser} from "../redux/actions/userActions";
 
 const styles = {
   toolBar: {
@@ -18,6 +20,10 @@ const styles = {
   navBarTitle: {
     flexGrow: "1",
     color: "inherit"
+  },
+  navbarProfileBtn: {
+    display: "flex",
+    alignItems: "center"
   }
 }
 
@@ -26,7 +32,7 @@ class NavBar extends Component {
     return (
       <AppBar position="fixed">
         {this.props.loading &&
-          <LinearProgress color="secondary" />
+          <LinearProgress color="primary" />
         }
         <Toolbar className={this.props.classes.toolBar}>
           <Typography
@@ -38,8 +44,43 @@ class NavBar extends Component {
             Social Spark
           </Typography>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/login">Login</Button>
-          <Button color="inherit" component={Link} to="/signup">Signup</Button>
+          {!this.props.auth &&
+            <React.Fragment>
+              <Button color="inherit" component={Link} to="/login">Login</Button>
+              <Button color="inherit" component={Link} to="/signup">Signup</Button>
+            </React.Fragment>
+          }
+          {this.props.auth &&
+            <React.Fragment>
+              <Button
+                className={this.props.classes.navbarProfileBtn}
+                color="inherit"
+                component={Link}
+                to="/profile"
+              >
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    marginRight: "5px",
+                    borderRadius: "50%",
+
+                    backgroundImage: `url(${this.props.user.imageURL})`,
+                    backgroundPosition: "center center",
+                    backgroundSize: "cover"
+                  }}
+                />
+                <span>{this.props.user.handle}</span>
+              </Button>
+              <Button
+                color="inherit"
+                component="div"
+                onClick={() => this.props.signout()}
+              >
+                Signout
+              </Button>
+            </React.Fragment>
+          }
         </Toolbar>
       </AppBar>
     );
@@ -48,8 +89,18 @@ class NavBar extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    auth: state.user.auth,
+    user: state.user.credentials,
     loading: state.data.loading
   }
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(NavBar));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signout: () => {
+      dispatch(logoutUser())
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavBar));
