@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import {withStyles} from "@material-ui/styles";
 import Post from "../components/Post";
 
@@ -12,26 +14,32 @@ const styles = {
 
 class Home extends Component {
   state = {
-    posts: []
+    posts: [],
+    loading: false
   };
 
   async componentDidMount() {
+    this.setState({
+      loading: true
+    });
+
     const response = await axios({
       method: "GET",
       url: "/posts"
     });
 
     this.setState({
-      posts: response.data.data
+      posts: response.data.data,
+      loading: false
     })
   };
 
   render() {
-    console.log(this.state.posts)
-
     const renderPosts = () => {
-      if(this.state.posts.length === 0) {
-        return <p>Loading..</p>
+      if(this.state.posts.length === 0 && this.state.loading) {
+        return <Typography variant="h5">Loading...</Typography>
+      } else if(this.state.posts.length === 0 && !this.state.loading) {
+        return <Typography variant="h5">No posts found.</Typography>
       }
       return this.state.posts.map((post) => {
         return <Post key={post.id} post={post} />
@@ -39,14 +47,19 @@ class Home extends Component {
     }
 
     return (
-      <Grid container spacing={2} className={this.props.classes.gridContainer}>
-        <Grid item sm={8} xs={12}>
-          {renderPosts()}
+      <div className={this.props.classes.wrapper}>
+        {this.state.loading &&
+          <LinearProgress/>
+        }
+        <Grid container spacing={2} className={this.props.classes.gridContainer}>
+          <Grid item sm={8} xs={12}>
+            {renderPosts()}
+          </Grid>
+          <Grid item sm={4} xs={12}>
+            <p>Profile</p>
+          </Grid>
         </Grid>
-        <Grid item sm={4} xs={12}>
-          <p>Profile</p>
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }
