@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import moment from "moment";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import MLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import LocationIcon from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import moment from "moment";
+import EditIcon from "@material-ui/icons/Edit";
+
+import {uploadImage} from "../redux/actions/userActions";
 
 const styles = {
   paper: {
@@ -25,19 +30,15 @@ const styles = {
   },
   profile: {
     "& .image-wrapper": {
-      textAlign: "center",
-      position: "relative",
-      "& button": {
-        position: "absolute",
-        top: "80%",
-        left: "70%"
-      }
+      textAlign: "center"
     },
     "& .profile-image": {
+      position: "relative",
       width: "100%",
       maxWidth: 200,
       height: 200,
       margin: "0 auto",
+      padding: "0 1.1rem 1.1rem 0",
       borderRadius: "50%",
       
       "& img": {
@@ -65,6 +66,14 @@ const styles = {
       }
     }
   },
+  avatarInputWrapper: {
+    position: "absolute",
+    bottom: 0,
+    right: 0
+  },
+  avatarInput: {
+    display: "none"
+  },
   buttons: {
     textAlign: "center",
     "& a": {
@@ -74,10 +83,21 @@ const styles = {
 }
 
 class Profile extends Component {  
+  avatarUploadHandler = (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("avatar", file, file.name);
+
+    this.props.uploadImage(formData)
+  }
+
+  editAvatarHandler = () => {
+    const avatarInput = document.getElementById("avatarInput");
+    avatarInput.click();
+  }
+
   render() {
     const {classes, user, loading} = this.props;
-
-    console.log(loading)
 
     return (
       <React.Fragment>
@@ -92,6 +112,22 @@ class Profile extends Component {
             <div className={classes.profile}>
               <div className="profile-image">
                 <img src={user.credentials.imageURL} alt="User avatar"/>
+                <Tooltip title="Change avatar" placement="top">
+                  <div className={classes.avatarInputWrapper}>
+                    <input
+                      className={classes.avatarInput}
+                      type="file"
+                      id="avatarInput"
+                      onChange={this.avatarUploadHandler}
+                    />
+                    <IconButton
+                      onClick={this.editAvatarHandler}
+                      className="button"
+                    >
+                      <EditIcon color="primary" />
+                    </IconButton>
+                  </div>
+                </Tooltip>
               </div>
               <hr/>
               <div className="profile-details">
@@ -168,4 +204,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(Profile));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uploadImage: (data) => {
+      dispatch(uploadImage(data))
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Profile));

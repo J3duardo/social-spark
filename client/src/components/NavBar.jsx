@@ -24,6 +24,9 @@ const styles = {
   navbarProfileBtn: {
     display: "flex",
     alignItems: "center"
+  },
+  orangeBtn: {
+    backgroundColor: "#ff3d00"
   }
 }
 
@@ -47,7 +50,7 @@ class NavBar extends Component {
           {!this.props.auth &&
             <React.Fragment>
               <Button color="inherit" component={Link} to="/login">Login</Button>
-              <Button color="inherit" component={Link} to="/signup">Signup</Button>
+              <Button className={this.props.classes.orangeBtn} color="inherit" component={Link} to="/signup">Signup</Button>
             </React.Fragment>
           }
           {this.props.auth &&
@@ -73,6 +76,7 @@ class NavBar extends Component {
                 <span>{this.props.user.handle}</span>
               </Button>
               <Button
+                className={this.props.classes.orangeBtn}
                 color="inherit"
                 component="div"
                 onClick={() => this.props.signout()}
