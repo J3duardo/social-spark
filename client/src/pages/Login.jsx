@@ -128,7 +128,7 @@ class Login extends Component {
                   className={classes.progress} />
               }
             </Button>
-            <Typography variant="body2">
+            <Typography color="textSecondary" variant="body2">
               Don't have an account?{" "}
               <Link to="/signup">Sign up</Link>
             </Typography>

@@ -26,7 +26,11 @@ const styles = {
     alignItems: "center"
   },
   orangeBtn: {
-    backgroundColor: "#ff3d00"
+    backgroundColor: "#ff3d00",
+
+    "&:hover": {
+      backgroundColor: "#962502"
+    }
   }
 }
 
@@ -73,7 +77,7 @@ class NavBar extends Component {
                     backgroundSize: "cover"
                   }}
                 />
-                <span>{this.props.user.handle}</span>
+                <span>{this.props.user.handle.split(" ")[0]}</span>
               </Button>
               <Button
                 className={this.props.classes.orangeBtn}

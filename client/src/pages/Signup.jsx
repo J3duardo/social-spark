@@ -155,7 +155,7 @@ class Signup extends Component {
               className={classes.button}
               disabled={loading}
             >
-              Login
+              Signup
               {loading &&
                 <CircularProgress
                   size="1.5rem"
@@ -163,7 +163,7 @@ class Signup extends Component {
                   className={classes.progress} />
               }
             </Button>
-            <Typography variant="body2">
+            <Typography color="textSecondary" variant="body2">
               Already have an account?{" "}
               <Link to="/login">Login</Link>
             </Typography>

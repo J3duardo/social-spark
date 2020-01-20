@@ -147,8 +147,9 @@ class Profile extends Component {
                 <hr/>
                 {user.credentials.location && (
                   <React.Fragment>
-                    <LocationIcon color="primary" />
-                    <span>{user.credentials.location}</span>
+                    <Typography variant="body2">
+                      <LocationIcon color="primary" /> {user.credentials.location}
+                    </Typography>
                     <hr/>
                   </React.Fragment>
                 )}
@@ -161,16 +162,17 @@ class Profile extends Component {
                     <hr/>
                   </React.Fragment>
                 }
-                <CalendarToday color="primary" /> {" "}
-                <Typography variant="body2">Joined: {moment(user.credentials.createdAt).calendar()}</Typography>
+                <Typography variant="body2">
+                  <CalendarToday color="primary" /> Joined: {moment(user.credentials.createdAt).calendar()}
+                </Typography>
               </div>
             </div>
           </Paper>
         }
         {!loading && !user.auth &&
           <Paper className={classes.paper}>
-            <Typography variant="body2" align="center">
-              No profile found, please login again
+            <Typography color="textSecondary" variant="h6" align="center">
+              No profile to display. Login or signup.
             </Typography>
             <div className={classes.buttons}>
               <Button
