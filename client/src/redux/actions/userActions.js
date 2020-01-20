@@ -6,6 +6,7 @@ export const loginUser = (userData, history) => {
     dispatch({type: LOADING_UI, payload: true});
 
     try {
+      // Procesar el login en el servidor
       const response = await axios({
         method: "POST",
         url: "/login",
@@ -15,11 +16,14 @@ export const loginUser = (userData, history) => {
         }
       });
       
+      // Guardar el token en el localStorage
       localStorage.setItem("token", `Bearer ${response.data.data.token}`);
 
+      // Asignar el token de autorización en los headers de los requests
       axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.data.token}`;
 
-      dispatch(getUserData(history));
+      // Tomar la data del perfil del usuario
+      return dispatch(getUserData(history));
       
     } catch (error) {
       let apiError = null;
@@ -27,73 +31,181 @@ export const loginUser = (userData, history) => {
       // Errores de campos requeridos
       // En axios el objeto error.response.data es el error arrojado por la API
       if(error.response) {
-        apiError = error.response.data
-      }
+        apiError = error.response.data;
 
-      if(apiError && apiError.message.toLowerCase().includes("validation")) {
+        // Errores de validación
+        if(apiError && apiError.message.toLowerCase().includes("validation")) {
+          dispatch({
+            type: SET_ERRORS,
+            payload: {
+              errors: {...apiError.data.errors}
+            }
+          })
+  
+          return dispatch({type: LOADING_UI, payload: false})
+  
+          // Errores de credenciales
+        } else if (apiError && apiError.message.includes("credentials")) {
+          // Error de intentos de login excedidos
+          if(apiError.data.includes("too-many-requests")) {
+            dispatch({
+              type: SET_ERRORS,
+              payload: {
+                errors: {
+                  general: "Too many login attempts. Try again later"
+                }
+              }
+            });
+  
+            return dispatch({type: LOADING_UI, payload: false})
+          }
+          
+          // Error de email inválido
+          if(apiError.data.includes("not-found")) {
+            dispatch({
+              type: SET_ERRORS,
+              payload: {
+                errors: {
+                  email: "User doesn't exist"
+                }
+              }
+            });
+  
+            return dispatch({type: LOADING_UI, payload: false})
+          }
+  
+          // Error de contraseña equivocada
+          if(apiError.data.includes("password")) {
+            dispatch({
+              type: SET_ERRORS,
+              payload: {
+                errors: {
+                  password: "Wrong password"
+                }
+              }
+            });
+  
+            return dispatch({type: LOADING_UI, payload: false});
+          }
+        }
+      } else {
+        // Errores generados en el servidor
         dispatch({
           type: SET_ERRORS,
           payload: {
-            errors: {...apiError.data.errors}
+            general: "Internal server error"
           }
-        })
-
-        return dispatch({type: LOADING_UI, payload: false})
-
-        // Errores de credenciales
-      } else if (apiError && apiError.message.includes("credentials")) {
-        // Error de intentos de login excedidos
-        if(apiError.data.includes("too-many-requests")) {
-          dispatch({
-            type: SET_ERRORS,
-            payload: {
-              errors: {
-                general: "Too many login attempts. Try again later"
-              }
-            }
-          });
-
-          return dispatch({type: LOADING_UI, payload: false})
-        }
-        
-        // Error de email inválido
-        if(apiError.data.includes("not-found")) {
-          dispatch({
-            type: SET_ERRORS,
-            payload: {
-              errors: {
-                email: "User doesn't exist"
-              }
-            }
-          });
-
-          return dispatch({type: LOADING_UI, payload: false})
-        }
-
-        // Error de contraseña equivocada
-        if(apiError.data.includes("password")) {
-          dispatch({
-            type: SET_ERRORS,
-            payload: {
-              errors: {
-                password: "Wrong password"
-              }
-            }
-          });
-
-          return dispatch({type: LOADING_UI, payload: false});
-        }
+        });
+  
+        return dispatch({type: LOADING_UI, payload: false});
       }
+    }
+  }
+}
 
-      // Errores generados en el servidor
-      dispatch({
-        type: SET_ERRORS,
-        payload: {
-          general: "Internal server error"
+export const signupUser = (userData, history) => {
+  return async (dispatch) => {
+    try {
+      dispatch({type: LOADING_UI, payload: true});
+
+      // Procesar el signup en el servidor
+      const response = await axios({
+        method: "POST",
+        url: "/signup",
+        data: {
+          email: userData.email,
+          password: userData.password,
+          confirmPassword: userData.confirmPassword,
+          handle: userData.handle,
+          bio: userData.bio,
+          website: userData.website,
+          location: userData.location
         }
       });
+      
+      // Guardar el token en el localStorage
+      localStorage.setItem("token", `Bearer ${response.data.data.token}`);
 
-      return dispatch({type: LOADING_UI, payload: false});
+      // Asignar el token de autorización en los headers de los requests
+      axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.data.token}`;
+
+      //Tomar la data del perfil del usuario
+      dispatch(getUserData(history));
+
+    } catch (error) {
+      let apiError = null;
+
+      if(error.response) {
+        apiError = error.response.data;
+
+        // Errores de validación de email, contraseña y handle
+        if(apiError && apiError.message.toLowerCase().includes("validation")) {
+          dispatch({
+            type: SET_ERRORS,
+            payload: {
+              errors: {
+                ...apiError.data.errors
+              }
+            }
+          });
+  
+          return dispatch({type: LOADING_UI, payload: false});
+  
+        } else if (apiError && apiError.message.toLowerCase().includes("handle")) {
+          dispatch({
+            type: SET_ERRORS,
+            payload: {
+              errors: {
+                handle: "Handle already in use"
+              }
+            }
+          });
+  
+          return dispatch({type: LOADING_UI, payload: false});
+  
+          // Errores de credenciales
+        } else if (apiError && apiError.message.includes("credentials")) {            
+          // Error de email inválido
+          if(apiError.data.includes("email-already-in-use")) {
+            dispatch({
+              type: SET_ERRORS,
+              payload: {
+                errors: {
+                  email: "Email already in use"
+                }
+              }
+            });
+    
+            return dispatch({type: LOADING_UI, payload: false});
+          }
+  
+          // Error de contraseña débil
+          if(apiError.data.includes("weak-password")) {
+            dispatch({
+              type: SET_ERRORS,
+              payload: {
+                errors: {
+                  password: "Password must be at least 6 characters long"
+                }
+              }
+            });
+    
+            return dispatch({type: LOADING_UI, payload: false});
+          }
+        }
+      } else {
+        // Errores generados en el servidor
+        dispatch({
+          type: SET_ERRORS,
+          payload: {
+            errors: {
+              general: "Internal server error"
+            }
+          }
+        });
+  
+        return dispatch({type: LOADING_UI, payload: false}); 
+      }
     }
   }
 }
