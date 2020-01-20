@@ -56,7 +56,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
-        <div>
+        <div className="global-wrapper">
           <BrowserRouter>
             <NavBar />
             <div className="container">

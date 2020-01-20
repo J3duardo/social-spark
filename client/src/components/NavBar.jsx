@@ -5,6 +5,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import {connect} from "react-redux";
+import { LinearProgress } from "@material-ui/core";
 
 const styles = {
   toolBar: {
@@ -23,6 +25,9 @@ class NavBar extends Component {
   render() {
     return (
       <AppBar position="fixed">
+        {this.props.loading &&
+          <LinearProgress color="secondary" />
+        }
         <Toolbar className={this.props.classes.toolBar}>
           <Typography
             className={this.props.classes.navBarTitle}
@@ -41,4 +46,10 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar);
+const mapStateToProps = (state) => {
+  return {
+    loading: state.data.loading
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps)(NavBar));
