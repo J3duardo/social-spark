@@ -6,7 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import axios from "axios";
+
+import {connect} from "react-redux";
+import {signupUser} from "../redux/actions/userActions";
+import { CLEAR_ERRORS } from "../redux/types";
 
 const styles = {
   form: {
@@ -44,101 +47,36 @@ class Signup extends Component {
     handle: "",
     bio: "",
     website: "",
-    location: "",
-    loading: false,
-    errors: {}
+    location: ""
+  }
+
+  componentWillUnmount() {
+    if(this.props.errors) {
+      this.props.clearErrors()
+    }
   }
 
   submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      this.setState({
-        loading: true
-      });
-
-      const response = await axios({
-        method: "POST",
-        url: "/signup",
-        data: {
-          email: this.state.email,
-          password: this.state.password,
-          confirmPassword: this.state.confirmPassword,
-          handle: this.state.handle,
-          bio: this.state.bio,
-          website: this.state.website,
-          location: this.state.location
-        }
-      });
-      
-      localStorage.setItem("token", `Bearer ${response.data.data.token}`);
-      
-      this.setState({
-        loading: false
-      });
-
-      this.props.history.push("/");
-      
-    } catch (error) {
-      console.log(error.response);
-      let apiError = null;
-
-      // Errores de campos requeridos
-      // En axios el objeto error.response.data es el error arrojado por la API
-      if(error.response) {
-        apiError = error.response.data
-      }
-
-      // Errores de validación de email, contraseña y handle
-      if(apiError && apiError.message.toLowerCase().includes("validation")) {
-        return this.setState({
-          loading: false,
-          errors: {
-            ...apiError.data.errors
-          }
-        })
-
-      } else if (apiError && apiError.message.toLowerCase().includes("handle")) {
-        return this.setState({
-          loading: false,
-          errors: {
-            handle: "Handle already in use"
-          }
-        })
-
-        // Errores de credenciales
-      } else if (apiError && apiError.message.includes("credentials")) {            
-        // Error de email inválido
-        if(apiError.data.includes("email-already-in-use")) {
-          return this.setState({
-            loading: false,
-            errors: {
-              email: "Email already in use"
-            }
-          })
-        }
-
-        // Error de contraseña débil
-        if(apiError.data.includes("weak-password")) {
-          return this.setState({
-            loading: false,
-            errors: {
-              password: "Password must be at least 6 characters long"
-            }
-          })
-        }
-      }
-
-      // Errores generados en el servidor
-      return this.setState({
-        loading: false,
-        errors: {
-          general: "Internal server error"
-        }
-      })
+    const {email, password, confirmPassword, handle, bio, website, location} = this.state;
+    const userData = {
+      email,
+      password,
+      confirmPassword,
+      handle,
+      bio,
+      website,
+      location
     }
+
+    this.props.signup(userData, this.props.history)    
   }
 
   onChangeHandler = (e) => {
+    if(this.props.errors) {
+      this.props.clearErrors()
+    };
+
     this.setState({
       [e.target.name]: e.target.value
     })
@@ -146,7 +84,7 @@ class Signup extends Component {
 
   render() {
     const {classes} = this.props;
-    const {errors, loading} = this.state;
+    const {errors, loading} = this.props;
 
     return (
       <Grid container className={classes.form}>
@@ -166,8 +104,8 @@ class Signup extends Component {
               className={classes.textField}
               value={this.state.email}
               onChange={this.onChangeHandler}
-              helperText={`${errors.email ? errors.email : ""}`}
-              error={errors.email ? true : false}
+              helperText={`${errors && errors.email ? errors.email : ""}`}
+              error={errors && errors.email ? true : false}
             />
             <TextField
               id="password"
@@ -178,8 +116,8 @@ class Signup extends Component {
               className={classes.textField}
               value={this.state.password}
               onChange={this.onChangeHandler}
-              helperText={`${errors.password ? errors.password : ""}`}
-              error={errors.password ? true : false}
+              helperText={`${errors && errors.password ? errors.password : ""}`}
+              error={errors && errors.password ? true : false}
             />
             <TextField
               id="confirmPassword"
@@ -190,8 +128,8 @@ class Signup extends Component {
               className={classes.textField}
               value={this.state.confirmPassword}
               onChange={this.onChangeHandler}
-              helperText={`${errors.confirmPassword ? errors.confirmPassword : ""}`}
-              error={errors.confirmPassword ? true : false}
+              helperText={`${errors && errors.confirmPassword ? errors.confirmPassword : ""}`}
+              error={errors && errors.confirmPassword ? true : false}
             />
             <TextField
               id="handle"
@@ -202,10 +140,10 @@ class Signup extends Component {
               className={classes.textField}
               value={this.state.handle}
               onChange={this.onChangeHandler}
-              helperText={`${errors.handle ? errors.handle : ""}`}
-              error={errors.handle ? true : false}
+              helperText={`${errors && errors.handle ? errors.handle : ""}`}
+              error={errors && errors.handle ? true : false}
             />
-            {errors.general &&
+            {errors && errors.general &&
               <Typography variant="body2" className={classes.generalError}>
                 {errors.general}
               </Typography>
@@ -237,5 +175,23 @@ class Signup extends Component {
   }
 }
 
-export default withStyles(styles)(Signup);
+const mapStateToProps = (state) => {
+  return {
+    loading: state.ui.loading,
+    errors: state.ui.errors
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signup: (data, history) => {
+      dispatch(signupUser(data, history))
+    },
+    clearErrors: () => {
+      dispatch({type: CLEAR_ERRORS})
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Signup));
 
