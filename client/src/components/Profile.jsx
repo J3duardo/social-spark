@@ -6,6 +6,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import MLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import LocationIcon from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
@@ -14,6 +16,12 @@ import moment from "moment";
 const styles = {
   paper: {
     padding: 20
+  },
+  progressWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "2rem"
   },
   profile: {
     "& .image-wrapper": {
@@ -26,7 +34,8 @@ const styles = {
       }
     },
     "& .profile-image": {
-      width: 200,
+      width: "100%",
+      maxWidth: 200,
       height: 200,
       margin: "0 auto",
       borderRadius: "50%",
@@ -68,77 +77,87 @@ class Profile extends Component {
   render() {
     const {classes, user, loading} = this.props;
 
-    let profile = !loading ? (user.auth ? (
-      <Paper className={classes.paper} >
-        <div className={classes.profile}>
-          <div className="profile-image">
-            <img src={user.credentials.imageURL} alt="User avatar"/>
-          </div>
-          <hr/>
-          <div className="profile-details">
-            <MLink
-              component={Link}
-              to={`/users/${user.credentials.handle}`}
-              color="primary" variant="h5"
-            >
-              @{user.credentials.handle}
-            </MLink>
-            <hr/>
-            {user.credentials.bio &&
-              <Typography variant="body2">
-                {user.credentials.bio}
-              </Typography>
-            }
-            <hr/>
-            {user.credentials.location && (
-              <React.Fragment>
-                <LocationIcon color="primary" />
-                <span>{user.credentials.location}</span>
-                <hr/>
-              </React.Fragment>
-            )}
-            {user.credentials.website &&
-              <React.Fragment>
-                <LinkIcon color="primary" />
-                <a href={user.credentials.website} target="_blank" rel="noopener noreferrer">
-                  {user.credentials.website}
-                </a>
-                <hr/>
-              </React.Fragment>
-            }
-            <CalendarToday color="primary" /> {" "}
-            <Typography variant="body2">Joined: {moment(user.credentials.createdAt).calendar()}</Typography>
-          </div>
-        </div>
-      </Paper>
-    ) : (
-      <Paper className={classes.paper}>
-        <Typography variant="body2" align="center">
-          No profile found, please login again
-        </Typography>
-        <div className={classes.buttons}>
-          <Button
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/login"
-          >
-            Login
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            component={Link}
-            to="/signup"
-          >
-            Signup
-          </Button>
-        </div>
-      </Paper>
-    )) :
-    (<p>Loading...</p>)
+    console.log(loading)
 
-    return profile;
+    return (
+      <React.Fragment>
+        {loading && (
+          <Paper className={classes.paper, classes.progressWrapper}>
+            <CircularProgress className={classes.progress} />
+          </Paper>
+        )}
+
+        {!loading && user.auth &&
+          <Paper className={classes.paper} >
+            <div className={classes.profile}>
+              <div className="profile-image">
+                <img src={user.credentials.imageURL} alt="User avatar"/>
+              </div>
+              <hr/>
+              <div className="profile-details">
+                <MLink
+                  component={Link}
+                  to={`/users/${user.credentials.handle}`}
+                  color="primary" variant="h5"
+                >
+                  @{user.credentials.handle}
+                </MLink>
+                <hr/>
+                {user.credentials.bio &&
+                  <Typography variant="body2">
+                    {user.credentials.bio}
+                  </Typography>
+                }
+                <hr/>
+                {user.credentials.location && (
+                  <React.Fragment>
+                    <LocationIcon color="primary" />
+                    <span>{user.credentials.location}</span>
+                    <hr/>
+                  </React.Fragment>
+                )}
+                {user.credentials.website &&
+                  <React.Fragment>
+                    <LinkIcon color="primary" />
+                    <a href={user.credentials.website} target="_blank" rel="noopener noreferrer">
+                      {user.credentials.website}
+                    </a>
+                    <hr/>
+                  </React.Fragment>
+                }
+                <CalendarToday color="primary" /> {" "}
+                <Typography variant="body2">Joined: {moment(user.credentials.createdAt).calendar()}</Typography>
+              </div>
+            </div>
+          </Paper>
+        }
+        {!loading && !user.auth &&
+          <Paper className={classes.paper}>
+            <Typography variant="body2" align="center">
+              No profile found, please login again
+            </Typography>
+            <div className={classes.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/signup"
+              >
+                Signup
+              </Button>
+            </div>
+          </Paper>
+        }
+      </React.Fragment>
+    )
   }
 }
 

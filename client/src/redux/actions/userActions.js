@@ -224,6 +224,8 @@ export const logoutUser = () => {
 // Action para obtener la data del perfil del usuario autenticado
 export const getUserData = (history) => {
   return async (dispatch) => {
+    dispatch({type: LOADING_UI, payload: true})
+
     try {
       const response = await axios({
         method: "GET",
