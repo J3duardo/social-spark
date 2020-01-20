@@ -1,6 +1,7 @@
-import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS } from "../types";
+import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_AUTH, SET_UNAUTH } from "../types";
 import axios from "axios";
 
+// Action para procesar login
 export const loginUser = (userData, history) => {
   return async (dispatch) => {
     dispatch({type: LOADING_UI, payload: true});
@@ -103,6 +104,7 @@ export const loginUser = (userData, history) => {
   }
 }
 
+// Action para procesar signup
 export const signupUser = (userData, history) => {
   return async (dispatch) => {
     try {
@@ -210,6 +212,16 @@ export const signupUser = (userData, history) => {
   }
 }
 
+// Action para procesar logout
+export const logoutUser = () => {
+  return (dispatch) => {
+    localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
+    dispatch({type: SET_UNAUTH})
+  }
+}
+
+// Action para obtener la data del perfil del usuario autenticado
 export const getUserData = (history) => {
   return async (dispatch) => {
     try {
