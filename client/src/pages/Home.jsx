@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {withStyles} from "@material-ui/styles";
 import Post from "../components/Post";
+import Profile from "../components/Profile";
 
 const styles = {
   gridContainer: {
@@ -56,7 +57,7 @@ class Home extends Component {
             {renderPosts()}
           </Grid>
           <Grid item sm={4} xs={12}>
-            <p>Profile</p>
+            <Profile />
           </Grid>
         </Grid>
       </div>
