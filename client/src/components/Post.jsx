@@ -25,6 +25,13 @@ const styles = {
   },
   content: {
     padding: "15px"
+  },
+  disabledBtn: {
+    cursor: "default",
+
+    "&:hover": {
+      backgroundColor: "transparent"
+    }
   }
 }
 
@@ -62,6 +69,12 @@ class Post extends Component {
               <FavoriteIcon color="primary" />
             </GenericIconButton>          
           }
+
+          {!this.props.auth &&
+            <GenericIconButton tipClassName={classes.disabledBtn} tipTitle="Login to add likes!">
+              <FavoriteIcon color="primary" disabled />
+            </GenericIconButton> 
+          }
         </React.Fragment>
       )
     }
@@ -97,7 +110,7 @@ class Post extends Component {
             </Typography>
 
             <Typography variant="body2">
-              <GenericIconButton tipTitle="Comments">
+              <GenericIconButton tipClassName={!this.props.auth && classes.disabledBtn} tipTitle={this.props.auth ? "Comments" : "Login to add comments!"}>
                 <ChatIcon color="primary" />
               </GenericIconButton>
               <span>{post.commentCount} comments</span>
