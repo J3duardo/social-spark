@@ -27,23 +27,23 @@ export default (state = initialState, action) => {
         error: action.payload
       }
     case LIKE_POST:
-      const likedPosts = state.posts;
+      const likedPosts = [...state.posts];
       const likedPostIndex = likedPosts.findIndex(post => post.id === action.payload.id);
       likedPosts[likedPostIndex] = action.payload;
       
       return {
         ...state,
-        posts: [...likedPosts],
+        posts: likedPosts,
         loading: false
       }
       case DISLIKE_POST:
-        const unlikedPosts = state.posts;
+        const unlikedPosts = [...state.posts];
         const unlikedPostIndex = unlikedPosts.findIndex(post => post.id === action.payload.id);
         unlikedPosts[unlikedPostIndex] = action.payload;
 
       return {
         ...state,
-        posts: [...unlikedPosts],
+        posts: unlikedPosts,
         loading: false
       }
     default:

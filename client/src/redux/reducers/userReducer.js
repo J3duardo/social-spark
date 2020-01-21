@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
         ]
       }
     case DISLIKE_POST:
-      const filteredLikes = state.likes.filter(like => like.postId !== action.payload.id && like.userHandle !== action.payload.userHandle)
+      const filteredLikes = state.likes.filter(like => like.postId !== action.payload.id)
       return {
         ...state,
         likes: [...filteredLikes]

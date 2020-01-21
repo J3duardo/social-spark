@@ -37,17 +37,22 @@ const styles = {
 
 class Post extends Component {
   checkIfLiked = () => {
-    if(this.props.user.likes.find(like => like.postId === this.props.post.id)) {
+    // Chequear si el usuario ya le dio like al post
+    const check = this.props.user.likes.find(like => like.postId === this.props.post.id);
+
+    if(check) {
       return true
     } else {
       return false
     }
   }
 
+  // Agregar el like al post
   likePost = () => {
     this.props.likePost(this.props.post.id)
   }
 
+  // Remover el like al post
   dislikePost = () => {
     this.props.dislikePost(this.props.post.id)
   }
@@ -58,18 +63,21 @@ class Post extends Component {
     const likeBtn = () => {
       return (
         <React.Fragment>
+          {/* Botón para remover el like */}
           {this.props.auth && this.checkIfLiked() &&
             <GenericIconButton tipTitle="I don't like it anymore" onClick={this.dislikePost}>
               <FavoriteBorder color="primary" />
             </GenericIconButton>          
           }
 
+          {/* Botón para agregar el like */}
           {this.props.auth && !this.checkIfLiked() &&
             <GenericIconButton tipTitle="Like post" onClick={this.likePost}>
               <FavoriteIcon color="primary" />
             </GenericIconButton>          
           }
 
+          {/* Botón de like desactivado para usuarios no autenticados */}
           {!this.props.auth &&
             <GenericIconButton tipClassName={classes.disabledBtn} tipTitle="Login to add likes!">
               <FavoriteIcon color="primary" disabled />
@@ -109,8 +117,12 @@ class Post extends Component {
               <span>{post.likeCount} likes</span>
             </Typography>
 
+            {/* Botón de comentarios */}
             <Typography variant="body2">
-              <GenericIconButton tipClassName={!this.props.auth && classes.disabledBtn} tipTitle={this.props.auth ? "Comments" : "Login to add comments!"}>
+              <GenericIconButton
+                tipClassName={!this.props.auth && classes.disabledBtn}
+                tipTitle={this.props.auth ? "Comments" : "Login to add comments!"}
+              >
                 <ChatIcon color="primary" />
               </GenericIconButton>
               <span>{post.commentCount} comments</span>
