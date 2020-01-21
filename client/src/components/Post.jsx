@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import {Link} from "react-router-dom";
+import DeletePostDialog from "./DeletePostDialog";
 
 import {withStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -17,6 +18,7 @@ import {likePost, dislikePost} from "../redux/actions/dataActions";
 
 const styles = {
   card: {
+    position: "relative",
     display: "flex",
     marginBottom: "15px"
   },
@@ -57,6 +59,19 @@ class Post extends Component {
     this.props.dislikePost(this.props.post.id)
   }
 
+  // Borrar post
+  deleteButton = () => {
+    const check = this.props.auth && this.props.post.userHandle === this.props.user.credentials.handle;
+
+    if(check){
+      return (
+        <DeletePostDialog postId={this.props.post.id} />
+      )
+    }
+
+    return null;
+  }
+
   render() {
     const {classes, post} = this.props;
 
@@ -89,6 +104,7 @@ class Post extends Component {
 
     return (
       <Card className={classes.card}>
+        {this.deleteButton()}
         <CardMedia
           title="Profile image"
           className={classes.image}
