@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR } from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST } from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -19,8 +19,48 @@ export const getPosts = () => {
     } catch (error) {
       dispatch({
         type: LOADING_POSTS_ERROR,
-        payload: error.response.data || error
+        payload: (error.response && error.response.data) || error
       })
+    }
+  }
+}
+
+// Action para dar like a los posts
+export const likePost = (postId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `/post/${postId}/like`
+      });
+  
+      dispatch({
+        type: LIKE_POST,
+        payload: response.data.data
+      })
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+// Action para dar unlike a los posts
+export const dislikePost = (postId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `/post/${postId}/unlike`
+      });
+  
+      dispatch({
+        type: DISLIKE_POST,
+        payload: response.data.data
+      })
+      
+    } catch (error) {
+      console.log(error)
     }
   }
 }

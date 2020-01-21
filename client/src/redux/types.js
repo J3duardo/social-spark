@@ -11,4 +11,6 @@ export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const GET_POSTS = "GET_POSTS";
 export const LOADING_POSTS = "LOADING_POSTS";
+export const LIKE_POST = "LIKE_POST";
+export const DISLIKE_POST = "DISLIKE_POST";
 export const LOADING_POSTS_ERROR = "LOADING_POSTS_ERROR";
