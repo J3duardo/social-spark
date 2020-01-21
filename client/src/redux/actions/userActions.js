@@ -277,3 +277,24 @@ export const uploadImage = (formData) => {
     }
   }
 }
+
+// Action para actualizar el perfil del usuario
+export const updateProfile = (data) => {
+  return async (dispatch) => {
+    dispatch({type: LOADING_UI, payload: true});
+
+    try {
+      await axios({
+        method: "POST",
+        url: "/user",
+        data: data
+      })
+  
+      dispatch(getUserData())
+      
+    } catch (error) {
+      console.log(error);
+      dispatch({type: LOADING_UI, payload: false});
+    }
+  }
+}
