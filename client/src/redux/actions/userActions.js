@@ -1,4 +1,4 @@
-import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_AUTH, SET_UNAUTH } from "../types";
+import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_UNAUTH } from "../types";
 import axios from "axios";
 
 // Action para procesar login

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import "./App.scss";
 import {MuiThemeProvider} from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
@@ -12,7 +12,6 @@ import AuthRoute from "./components/AuthRoute";
 
 import {Provider} from "react-redux";
 import store from "./redux/store";
-import {SET_AUTH, SET_ERRORS} from "./redux/types";
 import {logoutUser, getUserData} from "./redux/actions/userActions";
 import axios from "axios";
 

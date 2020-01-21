@@ -102,6 +102,7 @@ class Profile extends Component {
     return (
       <React.Fragment>
         {loading && (
+          // eslint-disable-next-line
           <Paper className={classes.paper, classes.progressWrapper}>
             <CircularProgress className={classes.progress} />
           </Paper>

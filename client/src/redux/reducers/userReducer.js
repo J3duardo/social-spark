@@ -1,4 +1,4 @@
-import { SET_AUTH, SET_UNAUTH, SET_USER } from "../types"
+import { SET_UNAUTH, SET_USER } from "../types"
 
 const initialState = {
   auth: false,
