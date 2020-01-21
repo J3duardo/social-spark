@@ -237,7 +237,10 @@ exports.addLike = async (req, res) => {
   
       return res.json({
         status: "OK",
-        data: postData
+        data: {
+          id: req.params.postId,
+          ...postData
+        }
       })
     }
   
@@ -291,7 +294,10 @@ exports.removeLike = async (req, res) => {
 
     return res.json({
       status: "OK",
-      data: postData
+      data: {
+        id: req.params.postId,
+          ...postData
+      }
     })
 
   } catch (error) {
