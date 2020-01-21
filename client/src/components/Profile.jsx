@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import moment from "moment";
+import EditProfile from "./EditProfile";
+
 import withStyles from "@material-ui/core/styles/withStyles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -156,10 +158,12 @@ class Profile extends Component {
                 )}
                 {user.credentials.website &&
                   <React.Fragment>
-                    <LinkIcon color="primary" />
-                    <a href={user.credentials.website} target="_blank" rel="noopener noreferrer">
-                      {user.credentials.website}
-                    </a>
+                    <Typography variant="body2">
+                      <LinkIcon color="primary" /> {" "}
+                      <a href={user.credentials.website} target="_blank" rel="noopener noreferrer">
+                        {user.credentials.website}
+                      </a>
+                    </Typography>
                     <hr/>
                   </React.Fragment>
                 }
@@ -167,6 +171,7 @@ class Profile extends Component {
                   <CalendarToday color="primary" /> Joined: {moment(user.credentials.createdAt).calendar()}
                 </Typography>
               </div>
+              <EditProfile />
             </div>
           </Paper>
         }
