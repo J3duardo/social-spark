@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST } from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST } from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -59,6 +59,23 @@ export const dislikePost = (postId) => {
         payload: response.data.data
       })
       
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+// Action para borrar posts
+export const deletePost = (postId) => {
+  return async (dispatch) => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `/post/${postId}` 
+      });
+
+      dispatch({type: DELETE_POST, payload: postId});
+
     } catch (error) {
       console.log(error)
     }

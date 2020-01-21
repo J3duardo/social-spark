@@ -14,3 +14,4 @@ export const LOADING_POSTS = "LOADING_POSTS";
 export const LIKE_POST = "LIKE_POST";
 export const DISLIKE_POST = "DISLIKE_POST";
 export const LOADING_POSTS_ERROR = "LOADING_POSTS_ERROR";
+export const DELETE_POST = "DELETE_POST";

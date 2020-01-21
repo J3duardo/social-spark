@@ -1,4 +1,4 @@
-import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST } from "../types"
+import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST } from "../types"
 
 const initialState = {
   posts: [],
@@ -45,6 +45,15 @@ export default (state = initialState, action) => {
         ...state,
         posts: unlikedPosts,
         loading: false
+      }
+    case DELETE_POST:
+      const currentPosts = state.posts;
+      const deletedPostIndex = currentPosts.findIndex(post => post.id === action.payload);
+      currentPosts.splice(deletedPostIndex, 1);
+
+      return {
+        ...state,
+        posts: currentPosts
       }
     default:
       return state
