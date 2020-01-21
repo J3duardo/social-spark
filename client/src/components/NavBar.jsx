@@ -8,6 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
@@ -67,26 +68,28 @@ class NavBar extends Component {
           }
           {this.props.auth &&
             <React.Fragment>
-              <Button
-                className={this.props.classes.navbarProfileBtn}
-                color="inherit"
-                component={Link}
-                to="/profile"
-              >
-                <div
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    marginRight: "5px",
-                    borderRadius: "50%",
+              <Tooltip title="Your profile">
+                <Button
+                  className={this.props.classes.navbarProfileBtn}
+                  color="inherit"
+                  component={Link}
+                  to="/profile"
+                >
+                  <div
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      marginRight: "5px",
+                      borderRadius: "50%",
 
-                    backgroundImage: `url(${this.props.user.imageURL})`,
-                    backgroundPosition: "center center",
-                    backgroundSize: "cover"
-                  }}
-                />
-                <span>{this.props.user.handle.split(" ")[0]}</span>
-              </Button>
+                      backgroundImage: `url(${this.props.user.imageURL})`,
+                      backgroundPosition: "center center",
+                      backgroundSize: "cover"
+                    }}
+                  />
+                  <span>{this.props.user.handle.split(" ")[0]}</span>
+                </Button>
+              </Tooltip>
               <GenericIconButton tipTitle="Create post">
                 <AddIcon className={this.props.classes.navIcon} />
               </GenericIconButton>
