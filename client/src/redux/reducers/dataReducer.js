@@ -1,4 +1,4 @@
-import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS } from "../types"
+import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST } from "../types"
 
 const initialState = {
   posts: [],
@@ -19,6 +19,11 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         posts: action.payload
+      }
+    case GET_POST:
+      return {
+        ...state,
+        post: action.payload
       }
     case LOADING_POSTS_ERROR:
       return {
@@ -62,6 +67,7 @@ export default (state = initialState, action) => {
         loading: false
       }
     case CREATING_POST:
+    case LOADING_POST:
       return {
         ...state,
         loading: action.payload

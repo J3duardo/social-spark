@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS} from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST} from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -101,7 +101,7 @@ export const createPost = (postData) => {
       dispatch({type: CREATING_POST, payload: false});
 
     } catch (error) {
-      if(error.response && error.response.data.message.toLowerCase().includes("validation")) {
+      if(error.response && error.response.data.message && error.response.data.message.toLowerCase().includes("validation")) {
         dispatch({
           type: SET_ERRORS,
           payload: {
@@ -112,6 +112,40 @@ export const createPost = (postData) => {
         dispatch({type: CREATING_POST, payload: false});
       } else {
         console.log(error);
+      }
+    }
+  }
+}
+
+// Action para tomar los detalles de un post
+export const getPost = (postId) => {
+  return async (dispatch) => {
+    dispatch({type: LOADING_POST, payload: true});
+
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `/post/${postId}`
+      });
+
+      dispatch({
+        type: GET_POST,
+        payload: response.data.data
+      });
+
+      dispatch({type: LOADING_POST, payload: false});
+
+    } catch (error) {
+      console.log({...error})
+      if(error.response && error.response.data.message && error.response.data.message.toLowerCase().includes("not found")) {
+        dispatch({
+          type: SET_ERRORS,
+          payload: {
+            errors: {notFound: "Post nor found"}
+          }
+        })
+      } else {
+        console.log(error.message)
       }
     }
   }
