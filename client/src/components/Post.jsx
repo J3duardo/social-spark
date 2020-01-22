@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import {Link} from "react-router-dom";
 import DeletePostDialog from "./DeletePostDialog";
+import PostDialog from "./PostDialog";
 
 import {withStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -143,6 +144,8 @@ class Post extends Component {
               </GenericIconButton>
               <span>{post.commentCount} comments</span>
             </Typography>
+            {/* Botón para expandir detalles del post */}
+            <PostDialog postId={this.props.post.id} userHandle={this.props.user.credentials.handle}/>
           </div>
         </CardContent>
       </Card>
