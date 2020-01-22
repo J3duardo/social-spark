@@ -33,7 +33,10 @@ const styles = {
   },
   textField: {
     margin: "10px 0"
-  }
+  },
+  progress: {
+    position: "absolute"
+  },
 }
 
 class CreatePost extends Component {
@@ -51,21 +54,29 @@ class CreatePost extends Component {
 
   closeDialogHandler = () => {
     this.setState({
-      open: false
+      open: false,
+      body: ""
     });
 
     this.props.clearErrors()
   }
 
   onChangeHandler = (e) => {
+    if(this.props.errors) {
+      this.props.clearErrors()
+    }
     this.setState({
       [e.target.name]: e.target.value
     })
   }
 
-  onSubmitHandler = (e) => {
+  onSubmitHandler = async (e) => {
     e.preventDefault();
-    this.props.createPost({body: this.state.body});
+    await this.props.createPost({body: this.state.body});
+
+    if(!this.props.loading && !this.props.errors) {
+      this.closeDialogHandler()
+    }
   }
 
   render() {
@@ -109,11 +120,23 @@ class CreatePost extends Component {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button color="primary" onClick={this.onSubmitHandler}>
+            <Button disabled={this.props.loading} color="primary" onClick={this.onSubmitHandler}>
               Submit
+              {this.props.loading &&
+                <CircularProgress
+                  size="1.5rem"
+                  thickness={6}
+                  className={classes.progress} />
+              }
             </Button>
-            <Button onClick={this.closeDialogHandler} color="secondary">
+            <Button disabled={this.props.loading} onClick={this.closeDialogHandler} color="secondary">
               Cancel
+              {this.props.loading &&
+                <CircularProgress
+                  size="1.5rem"
+                  thickness={6}
+                  className={classes.progress} />
+              }
             </Button>
           </DialogActions>
         </Dialog>
@@ -125,14 +148,15 @@ class CreatePost extends Component {
 const mapStateToProps = (state) => {
   return {
     posts: state.data.posts,
-    errors: state.ui.errors
+    errors: state.ui.errors,
+    loading: state.data.loading
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createPost: (postData) => {
-      dispatch(createPost(postData))
+    createPost: async (postData) => {
+      await dispatch(createPost(postData))
     },
     clearErrors: () => {
       dispatch({type: CLEAR_ERRORS})
