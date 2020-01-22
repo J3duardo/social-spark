@@ -1,5 +1,5 @@
-import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_UNAUTH } from "../types";
-import axios from "axios";
+import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_UNAUTH, UPDATE_NOTIFICATIONS } from "../types";
+import axios from "axios"
 
 // Action para procesar login
 export const loginUser = (userData, history) => {
@@ -296,5 +296,13 @@ export const updateProfile = (data) => {
       console.log(error);
       dispatch({type: LOADING_UI, payload: false});
     }
+  }
+}
+
+// Action para actualizar las notificaciones del usuario
+export const updateNotifications = (notification) => {
+  return {
+    type: UPDATE_NOTIFICATIONS,
+    payload: notification
   }
 }

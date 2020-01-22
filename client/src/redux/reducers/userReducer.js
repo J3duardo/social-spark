@@ -1,4 +1,4 @@
-import { SET_UNAUTH, SET_USER, LIKE_POST, DISLIKE_POST } from "../types"
+import { SET_UNAUTH, SET_USER, LIKE_POST, DISLIKE_POST, UPDATE_NOTIFICATIONS } from "../types"
 
 const initialState = {
   auth: false,
@@ -33,6 +33,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         likes: [...filteredLikes]
+      }
+    case UPDATE_NOTIFICATIONS:
+      if(state.credentials.handle === action.payload.recipient) {
+        return {
+          ...state,
+          notifications: [action.payload, ...state.notifications]
+        }
       }
     default:
       return state
