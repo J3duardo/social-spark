@@ -42,6 +42,16 @@ exports.createPost = async (req, res) => {
       createdAt: Date.now()
     }
 
+    if(req.body.body === "") {
+      return res.status(400).json({
+        status: "failed",
+        message: "validation error",
+        data: {
+          errors: {body: "Post content is required"}
+        }
+      })
+    }
+
     const createdPost = await firestore.collection("posts").add(newPost);
     const createdPostDoc = await createdPost.get()
 
@@ -49,7 +59,7 @@ exports.createPost = async (req, res) => {
       status: "OK",
       message: "Post created successfully",
       data: {
-        postId: createdPost.id,
+        id: createdPost.id,
         ...createdPostDoc.data()
       }
     });
@@ -79,7 +89,7 @@ exports.getPost = async (req, res) => {
     }
 
     postData = {
-      postId: postDoc.id,
+      id: postDoc.id,
       ...postDoc.data()
     }
 
