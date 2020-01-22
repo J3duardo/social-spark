@@ -13,9 +13,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import HomeIcon from "@material-ui/icons/Home";
 import Notifications from "@material-ui/icons/Notifications";
+import Badge from "@material-ui/core/Badge";
 
+import {firestore} from "../firebase-client";
 import {connect} from "react-redux";
-import {logoutUser} from "../redux/actions/userActions";
+import {logoutUser, updateNotifications} from "../redux/actions/userActions";
 
 const styles = {
   toolBar: {
@@ -45,6 +47,24 @@ const styles = {
 }
 
 class NavBar extends Component {
+  unsubscribeFromNotifications = null;
+
+  async componentDidMount() {
+    // Suscribirse a los cambios en la colección de notificaciones
+    this.unsubscribeFromNotifications = firestore.collection("notifications").onSnapshot(async (snapshot) => {
+      snapshot.docChanges().forEach(change => {
+        if(this.props.auth && change.type === "added") {
+          this.props.updateNotifications(change.doc.data())
+          console.log(change.doc.data())
+        }
+      })
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromNotifications()
+  }
+
   render() {
     return (
       <AppBar position="fixed">
@@ -97,7 +117,17 @@ class NavBar extends Component {
                 </GenericIconButton>
               </Link>
               <GenericIconButton tipTitle="Notifications">
-                <Notifications className={this.props.classes.navIcon} />
+                <Badge
+                  badgeContent={this.props.notifications.length}
+                  overlap="circle"
+                  color="secondary"
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <Notifications className={this.props.classes.navIcon} />
+                </Badge>
               </GenericIconButton>
               <Button
                 style={{marginLeft: "5px"}}
@@ -120,6 +150,7 @@ const mapStateToProps = (state) => {
   return {
     auth: state.user.auth,
     user: state.user.credentials,
+    notifications: state.user.notifications,
     loading: state.data.loading
   }
 }
@@ -128,6 +159,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     signout: () => {
       dispatch(logoutUser())
+    },
+    updateNotifications: (notification) => {
+      dispatch(updateNotifications(notification))
     }
   }
 }
