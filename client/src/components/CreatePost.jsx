@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -109,8 +106,8 @@ class CreatePost extends Component {
                 type="text"
                 name="body"
                 label="Post content"
-                rows="5"
                 fullWidth
+                multiline
                 placeholder="Say something interesting"
                 onChange={this.onChangeHandler}
                 value={this.state.body}
