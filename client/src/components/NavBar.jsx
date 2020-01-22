@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Link} from "react-router-dom";
 import GenericIconButton from "./GenericIconButton";
+import CreatePost from "./CreatePost";
 
 import {withStyles} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -10,7 +11,6 @@ import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 import Notifications from "@material-ui/icons/Notifications";
 
@@ -90,9 +90,7 @@ class NavBar extends Component {
                   <span>{this.props.user.handle.split(" ")[0]}</span>
                 </Button>
               </Tooltip>
-              <GenericIconButton tipTitle="Create post">
-                <AddIcon className={this.props.classes.navIcon} />
-              </GenericIconButton>
+              <CreatePost />
               <Link to="/">
                 <GenericIconButton tipTitle="Home">
                   <HomeIcon className={this.props.classes.navIcon} />
