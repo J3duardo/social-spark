@@ -17,6 +17,8 @@ import {connect} from "react-redux";
 import {getPost} from "../redux/actions/dataActions";
 import {CLEAR_ERRORS} from "../redux/types";
 
+import PostButtons from "./PostButtons";
+
 const styles = {
   postDialog: {
     position: "relative"
@@ -92,6 +94,7 @@ class PostDialog extends Component {
             <Typography variant="body1">
               {post.body}
             </Typography>
+            <PostButtons post={post} />
           </Grid>
         </Grid>
       )
@@ -131,7 +134,6 @@ class PostDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    post: state.data.post,
     loading: state.data.loading
   }
 }
