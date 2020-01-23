@@ -47,7 +47,7 @@ class PostButtons extends Component {
   }
 
   render() {
-    const {classes, post} = this.props;
+    const {classes, post, selectedPost} = this.props;
 
     const likeBtn = () => {
       return (
@@ -92,7 +92,7 @@ class PostButtons extends Component {
           >
             <ChatIcon color="primary" />
           </GenericIconButton>
-          <span>{post.commentCount} comments</span>
+          <span>{Object.keys(selectedPost).length ? selectedPost.commentCount : post.commentCount} comments</span>
         </Typography>
       </div>
     );
@@ -102,7 +102,8 @@ class PostButtons extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state.user.auth,
-    user: state.user
+    user: state.user,
+    selectedPost: state.data.post
   }
 }
 

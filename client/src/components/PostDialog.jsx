@@ -15,10 +15,11 @@ import UnfoldMore from "@material-ui/icons/UnfoldMore";
 
 import {connect} from "react-redux";
 import {getPost} from "../redux/actions/dataActions";
-import {CLEAR_ERRORS} from "../redux/types";
+import {CLEAR_ERRORS, CLEAR_SELECTED_POST} from "../redux/types";
 
 import PostButtons from "./PostButtons";
 import Comments from "./Comments";
+import CommentForm from "./CommentForm";
 
 const styles = {
   postDialog: {
@@ -59,6 +60,11 @@ const styles = {
 class PostDialog extends Component {
   state = {
     open: false
+  }
+
+  componentWillUnmount() {
+    this.props.clearSelectedPost();
+    this.props.clearErrors();
   }
 
   openDialogHandler = () => {
@@ -103,7 +109,8 @@ class PostDialog extends Component {
             <PostButtons post={post} />
           </Grid>
           <hr className={classes.dividerVisible}/>
-          <Comments comments={this.props.comments} />
+          {this.props.comments && <Comments comments={this.props.comments} />}
+          <CommentForm postId={this.props.post.id}/>
         </Grid>
       )
     }
@@ -154,6 +161,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearErrors: () => {
       dispatch({type: CLEAR_ERRORS})
+    },
+    clearSelectedPost: () => {
+      dispatch({type: CLEAR_SELECTED_POST})
     }
   }
 }
