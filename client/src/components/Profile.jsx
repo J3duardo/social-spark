@@ -136,7 +136,7 @@ class Profile extends Component {
               <div className="profile-details">
                 <MLink
                   component={Link}
-                  to={`/users/${user.credentials.handle}`}
+                  to={`/user/${user.credentials.handle}`}
                   color="primary" variant="h5"
                 >
                   @{user.credentials.handle}

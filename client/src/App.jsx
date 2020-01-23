@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NavBar from "./components/NavBar";
+import User from "./pages/User";
+
 import jwtDecode from "jwt-decode";
 import AuthRoute from "./components/AuthRoute";
 
@@ -63,6 +65,7 @@ const App = () => {
                 <Route exact path="/" component={Home} />
                 <AuthRoute exact path="/login" component={Login} />
                 <AuthRoute exact path="/signup" component={Signup} />
+                <Route exact path="/user/:handle" component={User}/>
               </Switch>
             </div>
           </BrowserRouter>
