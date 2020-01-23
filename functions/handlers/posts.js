@@ -194,6 +194,7 @@ exports.addComment = async (req, res) => {
 
     // Si existe, agregar el nuevo comentario
     const newCommentRef = await firestore.collection("comments").add(newComment);
+    const comment = await newCommentRef.get()
 
     // Sumar el comentario al contador de comentarios del post
     const postData = post.data();
@@ -202,7 +203,11 @@ exports.addComment = async (req, res) => {
 
     return res.json({
       status: "OK",
-      message: `Comment ${newCommentRef.id} added successfully to post ${post.id}`
+      message: `Comment ${newCommentRef.id} added successfully to post ${post.id}`,
+      data: {
+        id: comment.id,
+        ...comment.data()
+      }
     })
   } catch (error) {
     return res.status(500).json({
