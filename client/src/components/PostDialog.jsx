@@ -18,6 +18,7 @@ import {getPost} from "../redux/actions/dataActions";
 import {CLEAR_ERRORS} from "../redux/types";
 
 import PostButtons from "./PostButtons";
+import Comments from "./Comments";
 
 const styles = {
   postDialog: {
@@ -44,9 +45,14 @@ const styles = {
     objectPosition: "center",
     borderRadius: "50%"
   },
-  divider: {
+  dividerInvisible: {
     margin: "5px",
     border: "none"
+  },
+  dividerVisible: {
+    width: "100%",
+    marginBottom: "20px",
+    borderBottom: "1px solid #ccc"
   }
 }
 
@@ -82,20 +88,22 @@ class PostDialog extends Component {
           <Grid item sm={5}>
             <img src={post.userImage} className={classes.userImage} alt="User avatar"/>
           </Grid>
-          <Grid item sm={5}>
+          <Grid item sm={7}>
             <Typography component={Link} color="primary" variant="h5" to={`/users/${post.userHandle}`}>
               @{post.userHandle}
             </Typography>
-            <hr className={classes.divider}/>
+            <hr className={classes.dividerInvisible}/>
             <Typography variant="body2" color="textSecondary">
               {moment(post.createdAt).calendar()}
             </Typography>
-            <hr className={classes.divider}/>
+            <hr className={classes.dividerInvisible}/>
             <Typography variant="body1">
               {post.body}
             </Typography>
             <PostButtons post={post} />
           </Grid>
+          <hr className={classes.dividerVisible}/>
+          <Comments comments={this.props.comments} />
         </Grid>
       )
     }
@@ -134,6 +142,7 @@ class PostDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    comments: state.data.post.comments,
     loading: state.data.loading
   }
 }
