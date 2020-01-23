@@ -40,6 +40,8 @@ export default (state = initialState, action) => {
           ...state,
           notifications: [action.payload, ...state.notifications]
         }
+      } else {
+        return state
       }
     default:
       return state

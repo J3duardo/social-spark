@@ -55,7 +55,6 @@ class NavBar extends Component {
       snapshot.docChanges().forEach(change => {
         if(this.props.auth && change.type === "added") {
           this.props.updateNotifications(change.doc.data())
-          console.log(change.doc.data())
         }
       })
     });
