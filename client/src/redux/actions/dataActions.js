@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST} from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT} from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -146,6 +146,47 @@ export const getPost = (postId) => {
         })
       } else {
         console.log(error.message)
+      }
+    }
+  }
+}
+
+// Action para crear comentarios
+export const createComment = (postId, body) => {
+  return async (dispatch) => {
+    dispatch({type: ADDING_COMMENT, payload: true});
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `/post/${postId}/comment`,
+        data: {
+          body: body
+        }
+      });
+
+      dispatch({type: ADDING_COMMENT, payload: false});
+      dispatch({type: ADD_COMMENT, payload: response.data.data});
+
+    } catch (error) {
+      if(error.response && error.response.data.message.includes("not found")) {
+        dispatch({
+          type: SET_ERRORS,
+          payload: {
+            errors: {notFound: "Post not found"}
+          }
+        });
+        dispatch({type: ADDING_COMMENT, payload: false});
+      } else if(error.response && error.response.data.message.includes("empty")) {
+        dispatch({
+          type: SET_ERRORS,
+          payload: {
+            errors: {comment: "Comment can't be empty"}
+          }
+        });
+        dispatch({type: ADDING_COMMENT, payload: false});
+      } else {
+        console.log(error, {...error});
+        dispatch({type: ADDING_COMMENT, payload: false});
       }
     }
   }

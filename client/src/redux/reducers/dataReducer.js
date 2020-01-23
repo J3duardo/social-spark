@@ -1,9 +1,10 @@
-import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST } from "../types"
+import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, CLEAR_SELECTED_POST } from "../types"
 
 const initialState = {
   posts: [],
   post: {},
   loading: false,
+  loadingComment: false,
   error: null
 }
 
@@ -24,6 +25,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         post: action.payload
+      }
+    case CLEAR_SELECTED_POST:
+      return {
+        ...state,
+        post: {}
       }
     case LOADING_POSTS_ERROR:
       return {
@@ -65,6 +71,30 @@ export default (state = initialState, action) => {
         ...state,
         posts: [action.payload, ...state.posts],
         loading: false
+      }
+    case ADD_COMMENT:
+      // Actualizar el post seleccionado
+      const updatedPost = {...state.post};
+      updatedPost.comments = [action.payload, ...updatedPost.comments];
+      updatedPost.commentCount = updatedPost.commentCount + 1;
+
+      // Actualizar el post en el array de posts
+      const posts = [...state.posts];
+      const updatedPostIndex = state.posts.findIndex(post => post.id === action.payload.postId);
+      const postToUpdate = posts[updatedPostIndex];
+
+      postToUpdate.commentCount = postToUpdate.commentCount + 1
+      posts.splice(updatedPostIndex, 1, postToUpdate);
+
+      return {
+        ...state,
+        post: updatedPost,
+        posts: posts
+      }
+    case ADDING_COMMENT:
+      return {
+        ...state,
+        loadingComment: action.payload
       }
     case CREATING_POST:
     case LOADING_POST:
