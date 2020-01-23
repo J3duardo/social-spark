@@ -1,8 +1,10 @@
-import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, CLEAR_SELECTED_POST } from "../types"
+import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, CLEAR_SELECTED_POST, GET_USER_BY_HANDLE, LOADING_USER_BY_HANDLE, CLEAR_SELECTED_USER } from "../types"
 
 const initialState = {
   posts: [],
   post: {},
+  selectedUser: null,
+  loadingSelectedUser: false,
   loading: false,
   loadingComment: false,
   error: null
@@ -25,6 +27,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         post: action.payload
+      }
+    case GET_USER_BY_HANDLE:
+      return {
+        ...state,
+        selectedUser: action.payload,
+        loadingSelectedUser: false
+      }
+    case LOADING_USER_BY_HANDLE:
+      return {
+        ...state,
+        loadingSelectedUser: action.payload
+      }
+    case CLEAR_SELECTED_USER:
+      return {
+        ...state,
+        selectedUser: null
       }
     case CLEAR_SELECTED_POST:
       return {

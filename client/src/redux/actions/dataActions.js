@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT} from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, LOADING_USER_BY_HANDLE, GET_USER_BY_HANDLE} from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -187,6 +187,41 @@ export const createComment = (postId, body) => {
       } else {
         console.log(error, {...error});
         dispatch({type: ADDING_COMMENT, payload: false});
+      }
+    }
+  }
+}
+
+// Actio para buscar el perfil de un usuario específico
+export const getSpecificUser = (handle) => {
+  return async (dispatch) => {
+    dispatch({type: LOADING_USER_BY_HANDLE, payload: true});
+
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `/user/${handle}`
+      });
+
+      dispatch({
+        type: GET_USER_BY_HANDLE,
+        payload: response.data.data
+      });
+
+      dispatch({type: LOADING_USER_BY_HANDLE, payload: false});
+
+    } catch (error) {
+      if(error.response && error.response.data.message.includes("not found")) {
+        dispatch({type: LOADING_USER_BY_HANDLE, payload: false});
+        return dispatch({
+          type: SET_ERRORS,
+          payload: {
+            errors: {notFound: "User not found"}
+          }
+        });
+      } else {
+        console.log(error, {...error});
+        dispatch({type: LOADING_USER_BY_HANDLE, payload: false});
       }
     }
   }

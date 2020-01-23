@@ -17,6 +17,10 @@ export const LOADING_POSTS = "LOADING_POSTS";
 export const GET_POST = "GET_POST";
 export const LOADING_POST = "LOADING_POST";
 
+export const LOADING_USER_BY_HANDLE = "LOADING_USER_BY_HANDLE";
+export const GET_USER_BY_HANDLE = "GET_USER_BY_HANDLE";
+export const CLEAR_SELECTED_USER = "CLEAR_SELECTED_USER";
+
 export const CREATING_POST = "CREATING_POST";
 export const LIKE_POST = "LIKE_POST";
 export const DISLIKE_POST = "DISLIKE_POST";
