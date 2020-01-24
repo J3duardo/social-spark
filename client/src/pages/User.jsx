@@ -25,10 +25,19 @@ const styles = {
 
 export class User extends Component {
   async componentDidMount() {
+    // Cargar el perfil
     this.props.getSelectedUser(this.props.match.params.handle);
   }
 
+  componentDidUpdate(prevProps) {
+    // Cargar el perfil al cambiar la ruta desde la misma página
+    if(prevProps.match.params.handle !== this.props.match.params.handle) {
+      this.props.getSelectedUser(this.props.match.params.handle)
+    }
+  }
+
   componentWillUnmount() {
+    // Limpiar el usuario al salir de la página
     this.props.clearSelectedUser()
   }
 

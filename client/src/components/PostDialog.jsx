@@ -95,7 +95,7 @@ class PostDialog extends Component {
             <img src={post.userImage} className={classes.userImage} alt="User avatar"/>
           </Grid>
           <Grid item sm={7}>
-            <Typography component={Link} color="primary" variant="h5" to={`/users/${post.userHandle}`}>
+            <Typography component={Link} color="primary" variant="h5" to={`/user/${post.userHandle}`}>
               @{post.userHandle}
             </Typography>
             <hr className={classes.dividerInvisible}/>
