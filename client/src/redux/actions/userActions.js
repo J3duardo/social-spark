@@ -1,4 +1,4 @@
-import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_UNAUTH, UPDATE_NOTIFICATIONS } from "../types";
+import { LOADING_UI, SET_USER, SET_ERRORS, CLEAR_ERRORS, SET_UNAUTH, UPDATE_NOTIFICATIONS, MARK_NOTIFICATIONS_READ } from "../types";
 import axios from "axios"
 
 // Action para procesar login
@@ -304,5 +304,23 @@ export const updateNotifications = (notification) => {
   return {
     type: UPDATE_NOTIFICATIONS,
     payload: notification
+  }
+}
+
+// Action para marcar las notificationes como leídas
+export const markNotificationsRead = (data) => {
+  return async (dispatch) => {
+    try {
+      await axios({
+        method: "POST",
+        url: "/notifications",
+        data: {
+          notifications: data
+        }
+      });
+      dispatch({type: MARK_NOTIFICATIONS_READ})
+    } catch (error) {
+      console.log(error, {...error})
+    }
   }
 }

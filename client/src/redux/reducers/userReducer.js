@@ -1,4 +1,4 @@
-import { SET_UNAUTH, SET_USER, LIKE_POST, DISLIKE_POST, UPDATE_NOTIFICATIONS } from "../types"
+import { SET_UNAUTH, SET_USER, LIKE_POST, DISLIKE_POST, UPDATE_NOTIFICATIONS, MARK_NOTIFICATIONS_READ } from "../types"
 
 const initialState = {
   auth: false,
@@ -42,6 +42,15 @@ export default (state = initialState, action) => {
         }
       } else {
         return state
+      }
+    case MARK_NOTIFICATIONS_READ:
+      const readNotifications = [...state.notifications];
+      readNotifications.forEach((notification) => {
+        notification.read = true
+      })
+      return {
+        ...state,
+        notifications: readNotifications
       }
     default:
       return state
