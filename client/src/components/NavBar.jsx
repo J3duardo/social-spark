@@ -12,8 +12,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import HomeIcon from "@material-ui/icons/Home";
-import Notifications from "@material-ui/icons/Notifications";
-import Badge from "@material-ui/core/Badge";
+
+import Notifications from "./Notifications";
 
 import {firestore} from "../firebase-client";
 import {connect} from "react-redux";
@@ -115,19 +115,7 @@ class NavBar extends Component {
                   <HomeIcon className={this.props.classes.navIcon} />
                 </GenericIconButton>
               </Link>
-              <GenericIconButton tipTitle="Notifications">
-                <Badge
-                  badgeContent={this.props.notifications.length}
-                  overlap="circle"
-                  color="secondary"
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                >
-                  <Notifications className={this.props.classes.navIcon} />
-                </Badge>
-              </GenericIconButton>
+              <Notifications />
               <Button
                 style={{marginLeft: "5px"}}
                 className={this.props.classes.orangeBtn}
