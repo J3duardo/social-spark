@@ -82,6 +82,7 @@ exports.createNotificationOnLike = functions.firestore.document("likes/{id}").on
     // Esto es para evitar que el usuario sea notificado cuando él mismo da like a sus propios posts
     if(postDoc.exists && (postDoc.data().userHandle !== snapshot.data().userHandle)) {
       return await firestoreDB.collection("/notifications").doc(snapshot.id).set({
+        id: snapshot.id,
         recipient: postDoc.data().userHandle,
         sender: snapshot.data().userHandle,
         postId: postDoc.id,
@@ -119,6 +120,7 @@ exports.createNotificationOnComment = functions.firestore.document("comments/{id
     // Esto es para evitar que el usuario sea notificado cuando él mismo comenta sus propios posts
     if(postDoc.exists && (postDoc.data().userHandle !== snapshot.data().userHandle)) {
       return await firestoreDB.collection("notifications").doc(snapshot.id).set({
+        id: snapshot.id,
         recipient: postDoc.data().userHandle,
         sender: snapshot.data().userHandle,
         postId: postDoc.id,
