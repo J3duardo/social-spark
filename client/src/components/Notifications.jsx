@@ -55,10 +55,9 @@ class Notifications extends Component {
   }
 
   notificationsContent = () => {
-    const newNotifications = this.props.notifications.slice(0, 10);
-    if(newNotifications.length > 0) {
+    if(this.props.notifications.length > 0) {
       return (
-        newNotifications.map(notif => {
+        this.props.notifications.map(notif => {
           const type = notif.type === "like" ? "liked" : "commented on";
           const time = moment(notif.createdAt).calendar();
           const iconColor = notif.read ? "primary" : "secondary";
@@ -71,13 +70,13 @@ class Notifications extends Component {
                 component={Link}
                 color="textSecondary"
                 variant="body1"
-                to={`user/${notif.recipient}/post/${notif.postId}`}>
+                to={`/user/${notif.recipient}/post/${notif.postId}`}>
                   {notif.sender} {type} your post | {time}
                 </Typography>
             </MenuItem>
           )
         })
-      )
+      ).slice(0, 10)
     } else {
       return (
         <MenuItem onClick={this.closeNotificationsHandler}>

@@ -40,6 +40,12 @@ class PostPage extends Component {
     this.props.getPost(this.props.match.params.postId)
   }
 
+  componentDidUpdate(prevProps) {
+    if(prevProps.match.params.postId !== this.props.match.params.postId) {
+      this.props.getPost(this.props.match.params.postId)
+    }
+  }
+
   componentWillUnmount() {
     this.props.clearSelectedPost();
     this.props.clearErrors();
