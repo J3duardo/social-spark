@@ -13,6 +13,7 @@ import { CLEAR_ERRORS } from "../redux/types";
 
 const styles = {
   form: {
+    justifyContent: "center",
     textAlign: "center"
   },
   socialIconContainer: {
@@ -88,8 +89,7 @@ class Signup extends Component {
 
     return (
       <Grid container className={classes.form}>
-        <Grid item sm/>
-        <Grid item sm>
+        <Grid item style={{padding: "0 1rem"}}>
           <div className={classes.socialIconContainer}>
             <img className={classes.socialIcon} src="/img/social-icon.png" alt="social logo"/>
           </div>
@@ -169,7 +169,6 @@ class Signup extends Component {
             </Typography>
           </form>
         </Grid>
-        <Grid item sm/>
       </Grid>
     );
   }

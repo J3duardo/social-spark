@@ -16,6 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = {
   form: {
+    justifyContent: "center",
     textAlign: "center"
   },
   socialIconContainer: {
@@ -144,8 +145,7 @@ class ResetPassword extends Component {
 
     return (
       <Grid container className={classes.form}>
-        <Grid item sm/>
-        <Grid item sm>
+        <Grid item style={{padding: "0 1rem"}}>
           <div className={classes.socialIconContainer}>
             <img className={classes.socialIcon} src="/img/social-icon.png" alt="social logo"/>
           </div>
@@ -192,24 +192,23 @@ class ResetPassword extends Component {
 
         {/* Dialog */}
         <Dialog
-        open={this.state.success}
-        onClose={this.closeDialogHandler}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Email sent. Check your inbox.</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            We just sent you an email with instructions to reset your password, please check your inbox. In case you don't find it, check your spam folder or try again.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.closeDialogHandler} color="primary">
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-        <Grid item sm/>
+          open={this.state.success}
+          onClose={this.closeDialogHandler}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Email sent. Check your inbox.</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              We just sent you an email with instructions to reset your password, please check your inbox. In case you don't find it, check your spam folder or try again.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeDialogHandler} color="primary">
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Grid>
     );
   }
