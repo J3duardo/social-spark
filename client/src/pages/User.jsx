@@ -19,6 +19,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    minHeight: "60vh",
     padding: "2rem"
   }
 }

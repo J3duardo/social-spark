@@ -15,10 +15,11 @@ const styles = {
     padding: "0 24px"
   },
   loaderWrapper: {
+    minHeight: "60vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "2rem"
+    // padding: "4rem"
   }
 }
 

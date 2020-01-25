@@ -28,7 +28,8 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "2rem"
+    minHeight: "60vh"
+    // padding: "2rem"
   },
   profile: {
     "& .image-wrapper": {
