@@ -128,9 +128,13 @@ class Login extends Component {
                   className={classes.progress} />
               }
             </Button>
-            <Typography color="textSecondary" variant="body2">
+            <Typography color="textSecondary" variant="body2" style={{marginBottom: "10px"}}>
               Don't have an account?{" "}
               <Link to="/signup">Sign up</Link>
+            </Typography>
+            <Typography color="textSecondary" variant="body2">
+              Forgot your password?{" "}
+            <Link to="/reset-password">Reset password</Link>
             </Typography>
           </form>
         </Grid>

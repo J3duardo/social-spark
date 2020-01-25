@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ResetPassword from "./pages/ResetPassword";
 import NavBar from "./components/NavBar";
 import User from "./pages/User";
 
@@ -65,6 +66,7 @@ const App = () => {
                 <Route exact path="/" component={Home} />
                 <AuthRoute exact path="/login" component={Login} />
                 <AuthRoute exact path="/signup" component={Signup} />
+                <AuthRoute exact path="/reset-password" component={ResetPassword} />
                 <Route exact path="/user/:handle" component={User}/>
               </Switch>
             </div>
