@@ -9,6 +9,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import HomeIcon from "@material-ui/icons/Home";
@@ -43,6 +44,11 @@ const styles = {
   },
   "navIcon": {
     color: "#fff"
+  },
+  circularProgressWrapper: {
+    minWidth: "250px",
+    display: "flex",
+    justifyContent: "center"
   }
 }
 
@@ -67,7 +73,7 @@ class NavBar extends Component {
   render() {
     return (
       <AppBar position="fixed">
-        {this.props.loading &&
+        {this.props.loadingPosts &&
           <LinearProgress color="primary" />
         }
         <Toolbar className={this.props.classes.toolBar}>
@@ -79,13 +85,18 @@ class NavBar extends Component {
           >
             Social Spark
           </Typography>
-          {!this.props.auth &&
+          {this.props.loadingUi &&
+            <div className={this.props.classes.circularProgressWrapper}>
+              <CircularProgress size={30} style={{color: "#fff"}} />
+            </div>
+          }
+          {!this.props.auth && !this.props.loadingUi &&
             <React.Fragment>
               <Button color="inherit" component={Link} to="/login">Login</Button>
               <Button className={this.props.classes.orangeBtn} color="inherit" component={Link} to="/signup">Signup</Button>
             </React.Fragment>
           }
-          {this.props.auth &&
+          {this.props.auth && !this.props.loadingUi &&
             <React.Fragment>
               <Tooltip title="Your profile">
                 <Button
@@ -138,7 +149,8 @@ const mapStateToProps = (state) => {
     auth: state.user.auth,
     user: state.user.credentials,
     notifications: state.user.notifications,
-    loading: state.data.loading
+    loadingPosts: state.data.loading,
+    loadingUi: state.ui.loading
   }
 }
 
