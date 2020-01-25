@@ -10,6 +10,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NavBar from "./components/NavBar";
 import User from "./pages/User";
 import PostPage from "./pages/PostPage";
+import NotFound from "./pages/NotFound";
 
 import jwtDecode from "jwt-decode";
 import AuthRoute from "./components/AuthRoute";
@@ -70,6 +71,7 @@ const App = () => {
                 <AuthRoute exact path="/reset-password" component={ResetPassword} />
                 <Route exact path="/user/:handle" component={User}/>
                 <Route exact path="/user/:handle/post/:postId" component={PostPage}/>
+                <Route path="/*" component={NotFound}/>
               </Switch>
             </div>
           </BrowserRouter>
