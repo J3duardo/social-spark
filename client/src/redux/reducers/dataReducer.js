@@ -98,7 +98,7 @@ export default (state = initialState, action) => {
 
       // Actualizar el post en el array de posts
       const posts = [...state.posts];
-      const updatedPostIndex = state.posts.findIndex(post => post.id === action.payload.postId);
+      const updatedPostIndex = posts.findIndex(post => post.id === action.payload.postId);
       const postToUpdate = posts[updatedPostIndex];
 
       postToUpdate.commentCount = postToUpdate.commentCount + 1

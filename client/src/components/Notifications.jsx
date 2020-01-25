@@ -55,10 +55,10 @@ class Notifications extends Component {
   }
 
   notificationsContent = () => {
-    const unreadNotifications = this.props.notifications.filter(notif => notif.read === false)
-    if(unreadNotifications.length > 0) {
+    const newNotifications = this.props.notifications.slice(0, 10);
+    if(newNotifications.length > 0) {
       return (
-        unreadNotifications.map(notif => {
+        newNotifications.map(notif => {
           const type = notif.type === "like" ? "liked" : "commented on";
           const time = moment(notif.createdAt).calendar();
           const iconColor = notif.read ? "primary" : "secondary";
