@@ -11,18 +11,15 @@ import {connect} from "react-redux";
 import {loginUser} from "../redux/actions/userActions";
 import { CLEAR_ERRORS } from "../redux/types";
 
-const styles = {
+const styles = theme => ({
   form: {
-    justifyContent: "center",
-    textAlign: "center"
+    ...theme.form
   },
   socialIconContainer: {
-    width: "70px",
-    margin: "0 auto 10px auto"
+    ...theme.socialIconContainer
   },
   socialIcon: {
-    display: "block",
-    width: "100%"
+    ...theme.socialIcon
   },
   textField: {
     margin: "10px 0"
@@ -38,7 +35,7 @@ const styles = {
     color: "red",
     fontSize: "1rem"
   }
-}
+})
 
 class Login extends Component {
   state = {

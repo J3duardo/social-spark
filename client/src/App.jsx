@@ -34,6 +34,18 @@ const theme = createMuiTheme({
       dark: "#b22a00",
       contrastText: "#fff"
     }
+  },
+  form: {
+    justifyContent: "center",
+    textAlign: "center"
+  },
+  socialIconContainer: {
+    width: "70px",
+    margin: "0 auto 10px auto"
+  },
+  socialIcon: {
+    display: "block",
+    width: "100%"
   }
 })
 

@@ -14,18 +14,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const styles = {
+const styles = theme => ({
   form: {
-    justifyContent: "center",
-    textAlign: "center"
+    ...theme.form
   },
   socialIconContainer: {
-    width: "70px",
-    margin: "0 auto 10px auto"
+    ...theme.socialIconContainer
   },
   socialIcon: {
-    display: "block",
-    width: "100%"
+    ...theme.socialIcon
   },
   textField: {
     margin: "10px 0"
@@ -41,7 +38,7 @@ const styles = {
     color: "red",
     fontSize: "1rem"
   }
-}
+})
 
 class ResetPassword extends Component {
   state = {
