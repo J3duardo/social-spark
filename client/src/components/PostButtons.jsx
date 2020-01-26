@@ -9,11 +9,15 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import {connect} from "react-redux";
 import {likePost, dislikePost} from "../redux/actions/dataActions";
 
-const styles = {
+const styles = (theme) => ({
   iconsWrapper: {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     width: "100%",
+    [theme.breakpoints.down(410)]: {
+      flexDirection: "column"
+    }
   },
   disabledBtn: {
     cursor: "default",
@@ -22,7 +26,7 @@ const styles = {
       backgroundColor: "transparent"
     }
   }
-}
+})
 
 class PostButtons extends Component {
   checkIfLiked = () => {

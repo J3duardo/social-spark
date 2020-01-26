@@ -62,7 +62,7 @@ export class CommentForm extends Component {
 
     const form = () => {
       return (
-        <Grid item sm={12} style={{textAlign: "center"}}>
+        <Grid item sm={12} style={{width: "100%", textAlign: "center"}}>
           <form onSubmit={this.onSubmitHandler}>
             <TextField
               name="body"

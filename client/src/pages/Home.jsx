@@ -10,18 +10,34 @@ import Profile from "../components/Profile";
 import {connect} from "react-redux";
 import {getPosts} from "../redux/actions/dataActions";
 
-const styles = {
+const styles = (theme) => ({
   gridContainer: {
-    padding: "0 24px"
+    flexDirection: "row",
+    padding: "0 24px",
+    [theme.breakpoints.down(750)]: {
+      flexDirection: "column",
+      width: "100%"
+    }
+  },
+  posts: {
+    flexBasis: "66.7%",
+    [theme.breakpoints.down(750)]: {
+      flexGrow: 1
+    }
+  },
+  profile: {
+    flexBasis: "33.3%",
+    [theme.breakpoints.down(750)]: {
+      flexGrow: 1
+    }
   },
   loaderWrapper: {
     minHeight: "60vh",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    // padding: "4rem"
+    alignItems: "center"
   }
-}
+})
 
 class Home extends Component {
   componentDidMount() {
@@ -47,10 +63,10 @@ class Home extends Component {
     return (
       <div className={this.props.classes.wrapper}>
         <Grid container spacing={2} className={this.props.classes.gridContainer}>
-          <Grid item sm={8} xs={12}>
+          <Grid item className={this.props.classes.posts}>
             {renderPosts()}
           </Grid>
-          <Grid item sm={4} xs={12}>
+          <Grid item className={this.props.classes.profile}>
             <Profile />
           </Grid>
         </Grid>
