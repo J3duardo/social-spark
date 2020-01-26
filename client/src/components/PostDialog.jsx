@@ -21,9 +21,22 @@ import PostButtons from "./PostButtons";
 import Comments from "./Comments";
 import CommentForm from "./CommentForm";
 
-const styles = {
+const styles = (theme) => ({
   postDialog: {
     position: "relative"
+  },
+  postWrapper: {
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  postContent: {
+    display: "block",
+    [theme.breakpoints.down(542)]: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   },
   paper: {
     display: "flex",
@@ -55,7 +68,7 @@ const styles = {
     marginBottom: "20px",
     borderBottom: "1px solid #ccc"
   }
-}
+})
 
 class PostDialog extends Component {
   state = {
@@ -90,11 +103,11 @@ class PostDialog extends Component {
       )
     } else {
       return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} className={classes.postWrapper}>
           <Grid item sm={5}>
             <img src={post.userImage} className={classes.userImage} alt="User avatar"/>
           </Grid>
-          <Grid item sm={7}>
+          <Grid item sm={7} className={classes.postContent}>
             <Typography component={Link} color="primary" variant="h5" to={`/user/${post.userHandle}`}>
               @{post.userHandle}
             </Typography>

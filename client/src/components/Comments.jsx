@@ -13,12 +13,18 @@ const styles = {
     marginBottom: "5px",
     alignItems: "center"
   },
+  commentContent: {
+    alignItems: "center",
+  },
+  commentImgContainer: {
+    marginRight: "1rem"
+  },
   commentImg: {
     display: "block",
     width: "100%",
     maxWidth: "75px",
     height: "75px",
-    margin: 0,
+    margin: "0px",
     objectFit: "cover",
     objectPosition: "center",
     borderRadius: "50%"
@@ -44,10 +50,11 @@ class Comments extends Component {
         return (
           <React.Fragment key={createdAt}>
             <Grid item sm={12} className={classes.commentContainer}>
-              <Grid container>
-                <Grid item sm={2}>
+              <Grid container className={classes.commentContent}>
+                <Grid item sm={2}className={classes.commentImgContainer}>                  
                   <img
                     src={userAvatar}
+                    style={{marginRight: 0}}
                     className={classes.commentImg}
                     alt="user avatar"
                   />
