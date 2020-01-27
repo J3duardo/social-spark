@@ -5,16 +5,23 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
+import GenericIconButton from "./GenericIconButton";
+import DeleteOutline from "@material-ui/icons/DeleteOutline";
+
+import {connect} from "react-redux";
+import {deleteComment} from "../redux/actions/dataActions";
+
 const styles = {
   commentData: {
     width: "100%"
   },
   commentContainer: {
     marginBottom: "5px",
-    alignItems: "center"
+    alignItems: "center",
   },
   commentContent: {
-    alignItems: "center",
+    position: "relative",
+    alignItems: "center"
   },
   commentImgContainer: {
     marginRight: "1rem"
@@ -29,6 +36,11 @@ const styles = {
     objectPosition: "center",
     borderRadius: "50%"
   },
+  deleteComment: {
+    position: "absolute",
+    top: "5px",
+    right: "5px"
+  },
   dividerInvisible: {
     margin: "5px",
     border: "none"
@@ -41,8 +53,12 @@ const styles = {
 }
 
 class Comments extends Component {
+  deleteCommentHandler = (commentId, postId) => {
+    this.props.deleteComment(commentId, postId)
+  }
+
   render() {
-    const {comments, classes}= this.props;
+    const {comments, classes, auth, currentUserHandle, loading}= this.props;
 
     const renderComments = () => {
       return comments.map(comment => {
@@ -51,6 +67,16 @@ class Comments extends Component {
           <React.Fragment key={createdAt}>
             <Grid item sm={12} className={classes.commentContainer}>
               <Grid container className={classes.commentContent}>
+                {auth && currentUserHandle === userHandle &&
+                  <GenericIconButton
+                    tipTitle="Delete comment"
+                    disabled={loading}
+                    btnClassName={classes.deleteComment}
+                    onClick={()=> this.deleteCommentHandler(comment.id, comment.postId)}
+                  >
+                    <DeleteOutline color="secondary"/>
+                  </GenericIconButton>
+                }
                 <Grid item sm={2}className={classes.commentImgContainer}>                  
                   <img
                     src={userAvatar}
@@ -94,4 +120,20 @@ class Comments extends Component {
   }
 }
 
-export default withStyles(styles)(Comments);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.user.auth,
+    currentUserHandle: state.user.credentials.handle,
+    loading: state.data.deletingComment
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteComment: (commentId, postId) => {
+      dispatch(deleteComment(commentId, postId))
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Comments));

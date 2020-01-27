@@ -92,6 +92,9 @@ class PostDialog extends Component {
     this.setState({
       open: false
     });
+    setTimeout(() => {
+      this.props.clearSelectedPost();
+    }, 0)
   }
 
   dialogContent = (post, classes) => {
