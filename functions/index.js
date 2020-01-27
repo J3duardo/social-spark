@@ -3,7 +3,7 @@ const firestoreDB = require("./utilities/admin").firestore;
 
 // Handlers
 const {getPosts, createPost, getPost, addComment, addLike, removeLike, deletePost} = require("./handlers/posts");
-const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead} = require("./handlers/users");
+const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword} = require("./handlers/users");
 
 // Middleware
 const {authMiddleware} = require("./middleware/auth");
@@ -48,6 +48,9 @@ app.post("/signup", userSignup);
 
 // Iniciar sesión
 app.post("/login", userLogin);
+
+// Cambiar la contraseña del usuario
+app.post("/change-password", authMiddleware, changePassword);
 
 // Actualizar el avatar del usuario
 app.post("/users/image", authMiddleware, uploadImg);

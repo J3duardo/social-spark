@@ -180,6 +180,27 @@ exports.userLogin = async (req, res) => {
   }
 }
 
+// Handler para cambiar la contraseña del usuario
+exports.changePassword = async (req, res) => {
+  try {
+    const userRecord = await admin.auth().updateUser(req.body.uid, {
+      password: req.body.password
+    })
+
+    return res.status(200).json({
+      status: "OK",
+      message: "Password updated successfully",
+      data: userRecord
+    })
+  } catch (error) {
+    return res.status(500).json({
+      status: "failed",
+      message: "Internal server error",
+      data: error
+    })
+  }
+}
+
 // Handler para actualizar el avatar del usuario
 exports.uploadImg = async (req, res) => {
   try {
