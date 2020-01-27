@@ -19,10 +19,10 @@ import {connect} from "react-redux";
 
 const styles = (theme) => ({
   formWrapper: {
-    witdth: "100%",
+    width: "100%",
     maxWidth: "600px",
     margin: "0 auto",
-    padding: "0 1rem",
+    padding: "0 1rem 1rem 1rem",
   },
   form: {
     ...theme.form,
@@ -53,7 +53,12 @@ class Profile extends Component {
     password: "",
     newPassword: "",
     newPasswordConfirm: "",
-    loading: false,
+    passwordUpdated: false,
+    email: "",
+    emailConfirm: "",
+    emailUpdated: false,
+    loadingPassword: false,
+    loadingEmail: false,
     showModal: false,
     error: {
       status: false,
@@ -92,11 +97,13 @@ class Profile extends Component {
 
   closeDialogHandler = () => {
     this.setState({
-      showModal: false
+      showModal: false,
+      emailUpdated: false,
+      passwordUpdated: false
     })
   }
 
-  submitHandler = async (e) => {
+  submitPasswordHandler = async (e) => {
     e.preventDefault();
 
     const data = {
@@ -148,7 +155,7 @@ class Profile extends Component {
     
     try {
       this.setState({
-        loading: true
+        loadingPassword: true
       });
 
       // Chequear la contraseña actual
@@ -161,7 +168,7 @@ class Profile extends Component {
         }
       });
       
-      // Si la contraseña actual es correcta, actalizarla
+      // Si la contraseña actual es correcta, actualizarla
       await axios({
         method: "POST",
         url: "/change-password",
@@ -175,14 +182,15 @@ class Profile extends Component {
         password: "",
         newPassword: "",
         newPasswordConfirm: "",
-        loading: false,
+        passwordUpdated: true,
+        loadingPassword: false,
         showModal: true
       });
 
     } catch (error) {
       if(error.response.data && typeof error.response.data.data === "string") {
         return this.setState({
-          loading: false,
+          loadingPassword: false,
           showModal: false,
           error: {
             status: true,
@@ -192,7 +200,7 @@ class Profile extends Component {
         })
       } else if(error.response.data && typeof error.response.data.data === "object") {
         return this.setState({
-          loading: false,
+          loadingPassword: false,
           showModal: false,
           error: {
             status: true,
@@ -203,7 +211,7 @@ class Profile extends Component {
       }
 
       this.setState({
-        loading: false,
+        loadingPassword: false,
         showModal: false,
         error: {
           error: {
@@ -216,17 +224,121 @@ class Profile extends Component {
     }
   }
 
+  submitEmailHandler = async (e) => {
+    e.preventDefault();
+    
+    // Chequear si se introdujo un email válido
+    const isEmail = (email) => {
+      const regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    
+      if(email.match(regExp)) {
+        return true
+      }
+    
+      return false
+    }
+
+    if(!isEmail(this.state.email) || this.state.email === "") {
+      return this.setState({
+        loadingEmail: false,
+        showModal: false,
+        error: {
+          status: true,
+          type: "email",
+          message: "Invalid email"
+        }
+      })
+    }
+
+    // Chequear si se confirmó el email
+    if(!isEmail(this.state.email) || this.state.emailConfirm === "") {
+      return this.setState({
+        loadingEmail: false,
+        showModal: false,
+        error: {
+          status: true,
+          type: "emailConfirm",
+          message: "Invalid email"
+        }
+      })
+    }
+
+    // Chequear si los emails coinciden
+    if(this.state.email !== this.state.emailConfirm) {
+      return this.setState({
+        loadingEmail: false,
+        showModal: false,
+        error: {
+          status: true,
+          type: "emailMatch",
+          message: "Emails don't match"
+        }
+      })
+    }
+
+    try {
+      this.setState({
+        loadingEmail: true
+      })
+
+      // Actualizar el email
+      await axios({
+        method: "POST",
+        url: "/change-email",
+        data: {
+          email: this.state.email,
+          uid: this.props.uid
+        }
+      })
+  
+      this.setState({
+        email: "",
+        emailConfirm: "",
+        emailUpdated: true,
+        loadingEmail: false,
+        showModal: true
+      });
+
+    } catch (error) {
+      if(error.response.data) {
+        return this.setState({
+          loadingEmail: false,
+          showModal: false,
+          error: {
+            status: true,
+            type: "submitEmail",
+            message: error.response.data.message
+          }
+        })
+      }
+
+      this.setState({
+        loadingEmail: false,
+        showModal: false,
+        error: {
+          error: {
+            status: true,
+            type: "submitEmail",
+            message: error.message
+          }
+        }
+      })
+    }
+  }
+
   render() {
-    const {error, loading, showModal} = this.state;
+    const {error, loadingPassword, loadingEmail, showModal} = this.state;
     const {classes} = this.props;
 
     return (
       <div className={classes.formWrapper}>
-        <Paper variant="outlined">
+        <Typography variant="h4" style={{textAlign: "center", marginBottom: "1rem"}}>Account settings</Typography>
+        {/* Formulario para modificar la contraseña */}
+        <Paper variant="outlined" style={{marginBottom: "1rem"}}>
           <Grid container className={classes.form}>
             <Grid item style={{padding: "0 1rem"}}>
-              <Typography variant="h4" className={classes.pageTitle}>Change your password</Typography>
-              <form noValidate onSubmit={this.submitHandler}>
+              <Typography variant="h5" className={classes.pageTitle}>Change your Password</Typography>
+              <form noValidate onSubmit={this.submitPasswordHandler}>
                 <TextField
                   id="password"
                   name="password"
@@ -273,10 +385,66 @@ class Profile extends Component {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={loading}
+                  disabled={loadingPassword}
                 >
                   Submit
-                  {loading &&
+                  {loadingPassword &&
+                    <CircularProgress
+                      size="1.5rem"
+                      thickness={6}
+                      className={classes.progress}
+                    />
+                  }
+                </Button>
+              </form>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* Formulario para actulizar el email */}
+        <Paper variant="outlined">
+          <Grid container className={classes.form}>
+            <Grid item style={{width: "100%", padding: "0 1rem"}}>
+              <Typography variant="h5" className={classes.pageTitle}>Change your Email</Typography>
+              <form noValidate onSubmit={this.submitEmailHandler}>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Change your email"
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.email}
+                  onChange={this.onChangeHandler}
+                  helperText={`${error.type === "email" || error.type === "emailMatch" ? error.message : ""}`}
+                  error={error.type === "email" || error.type === "emailMatch" ? true : false}
+                />
+                <TextField
+                  id="emailConfirm"
+                  name="emailConfirm"
+                  type="email"
+                  label="Confirm your email"
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.emailConfirm}
+                  onChange={this.onChangeHandler}
+                  helperText={`${error.type === "email" || error.type === "emailConfirm" || error.type === "emailMatch" ? error.message : ""}`}
+                  error={error.type === "email" || error.type === "emailConfirm" || error.type === "emailMatch" ? true : false}
+                />
+                {error.type === "submitEmail" &&
+                  <Typography variant="body2" className={classes.generalError}>
+                    {error.message}
+                  </Typography>
+                }
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  disabled={loadingEmail}
+                >
+                  Submit
+                  {loadingEmail &&
                     <CircularProgress
                       size="1.5rem"
                       thickness={6}
@@ -299,7 +467,8 @@ class Profile extends Component {
           <DialogTitle id="alert-dialog-title">Success!</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Your password has been successfully updated
+              {this.state.passwordUpdated && "Your Password has been successfully updated"}
+              {this.state.emailUpdated && "Your Email has been successfully updated"}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
