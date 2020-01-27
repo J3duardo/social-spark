@@ -120,7 +120,7 @@ export default (state = initialState, action) => {
 
       // Remover el comentario del post
       const selectedPostComments = [...selectedPost.comments];
-      const deletedCommentIndex = selectedPostComments.findIndex(comment => comment.id !== action.payload.id);
+      const deletedCommentIndex = selectedPostComments.findIndex(comment => comment.id === action.payload.id);
       selectedPostComments.splice(deletedCommentIndex, 1);
       selectedPost.comments = selectedPostComments;
 
