@@ -9,10 +9,12 @@ const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpec
 
 // Middleware
 const {authMiddleware} = require("./middleware/auth");
+const cors = require("cors");
 
 // App de express
 const express = require("express");
 const app = express();
+app.use(cors());
 
 
 //----------------------------//
