@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const firestoreDB = require("./utilities/admin").firestore;
 
 // Handlers
-const {getPosts, createPost, getPost, addComment, addLike, removeLike, deletePost} = require("./handlers/posts");
+const {getPosts, createPost, getPost, addComment, deleteComment, addLike, removeLike, deletePost} = require("./handlers/posts");
 const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword} = require("./handlers/users");
 
 // Middleware
@@ -31,6 +31,9 @@ app.delete("/post/:postId", authMiddleware, deletePost);
 
 // Agregar comentarios a los posts
 app.post("/post/:postId/comment", authMiddleware, addComment);
+
+// Eliminar comentarios
+app.post("/post/:postId/comment/:commentId", authMiddleware, deleteComment);
 
 // Agregar likes a los posts
 app.get("/post/:postId/like", authMiddleware, addLike);

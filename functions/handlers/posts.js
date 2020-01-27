@@ -95,7 +95,7 @@ exports.getPost = async (req, res) => {
 
     // Buscar comentarios del post
     const commentsSnapshot = await firestore.collection("comments").orderBy("createdAt", "desc").where("postId", "==", req.params.postId).get();
-    commentsSnapshot.docs.forEach(docSnapshot => postComments.push(docSnapshot.data()));
+    commentsSnapshot.docs.forEach(docSnapshot => postComments.push({id: docSnapshot.id, ...docSnapshot.data()}));
 
     postData.comments = postComments;
 
@@ -194,7 +194,8 @@ exports.addComment = async (req, res) => {
 
     // Si existe, agregar el nuevo comentario
     const newCommentRef = await firestore.collection("comments").add(newComment);
-    const comment = await newCommentRef.get()
+    await newCommentRef.update({id: newCommentRef.id});
+    const comment = await newCommentRef.get();
 
     // Sumar el comentario al contador de comentarios del post
     const postData = post.data();
@@ -205,7 +206,6 @@ exports.addComment = async (req, res) => {
       status: "OK",
       message: `Comment ${newCommentRef.id} added successfully to post ${post.id}`,
       data: {
-        id: comment.id,
         ...comment.data()
       }
     })
@@ -214,6 +214,56 @@ exports.addComment = async (req, res) => {
       status: "failed",
       message: "Internal server error",
       error: error
+    })
+  }
+}
+
+// Handler para eliminar comentarios
+exports.deleteComment = async (req, res) => {
+  try {
+    // Chequear si el comentario existe
+    const commentSnapshot = await firestore.collection("comments").where("postId", "==", req.body.postId).where("id", "==", req.body.commentId).get();
+    const commentDoc = commentSnapshot.docs[0];
+    
+    // Retornar con error 404 si el comentario no existe
+    if(commentSnapshot.size === 0) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Comment not found"
+      })
+    }
+
+    // Chequear si el post a borrar pertenece al usuario que trata de borrarlo
+    if(commentDoc.data().userHandle !== req.user.handle) {
+      return res.status(401).json({
+        status: "failed",
+        message: "You can delete only your own comments!"
+      })
+    }
+
+    // Borrar el comentario
+    await commentDoc.ref.delete();
+
+    // Restar el comentario al contador de comentarios del post
+    const post = await firestore.collection("posts").doc(req.body.postId).get();
+    const postData = post.data();
+    postData.commentCount = postData.commentCount - 1;
+    await post.ref.update({commentCount: postData.commentCount});
+
+    return res.json({
+      status: "OK",
+      message: "Comment deleted successfully",
+      data: {
+        id: commentDoc.id,
+        ...commentDoc.data()
+      }
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      status: "failed",
+      message: "Internal server error",
+      error: {...error}
     })
   }
 }
