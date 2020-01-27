@@ -98,7 +98,14 @@ class NavBar extends Component {
           }
           {this.props.auth && !this.props.loadingUi &&
             <React.Fragment>
-              <Tooltip title="Your profile">
+              <CreatePost />
+              <Link to="/">
+                <GenericIconButton tipTitle="Home">
+                  <HomeIcon className={this.props.classes.navIcon} />
+                </GenericIconButton>
+              </Link>
+              <Notifications />
+              <Tooltip title="Your account settings">
                 <Button
                   className={this.props.classes.navbarProfileBtn}
                   color="inherit"
@@ -117,16 +124,10 @@ class NavBar extends Component {
                       backgroundSize: "cover"
                     }}
                   />
-                  <span>{this.props.user.handle.split(" ")[0]}</span>
+                  {/* <span>{this.props.user.handle.split(" ")[0]}</span> */}
+                  <span>Settings</span>
                 </Button>
               </Tooltip>
-              <CreatePost />
-              <Link to="/">
-                <GenericIconButton tipTitle="Home">
-                  <HomeIcon className={this.props.classes.navIcon} />
-                </GenericIconButton>
-              </Link>
-              <Notifications />
               <Button
                 style={{marginLeft: "5px"}}
                 className={this.props.classes.orangeBtn}
