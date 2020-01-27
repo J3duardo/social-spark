@@ -201,6 +201,34 @@ exports.changePassword = async (req, res) => {
   }
 }
 
+// Handler para cambiar el email del usuario
+exports.changeEmail = async (req, res) => {
+  try {
+    if(!isEmpty(req.body.email) || isEmail(req.body.email)) {
+      const userRecord = await admin.auth().updateUser(req.body.uid, {
+        email: req.body.email
+      })
+      return res.status(200).json({
+        status: "OK",
+        message: "Email updated successfully",
+        data: userRecord
+      })
+    } else {
+      return res.status(400).json({
+        status: "failed",
+        message: "Invalid email"
+      })
+    }
+
+  } catch (error) {
+    return res.status(500).json({
+      status: "failed",
+      message: "Internal server error",
+      data: error
+    })
+  }
+}
+
 // Handler para actualizar el avatar del usuario
 exports.uploadImg = async (req, res) => {
   try {

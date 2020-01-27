@@ -1,9 +1,11 @@
 const functions = require('firebase-functions');
 const firestoreDB = require("./utilities/admin").firestore;
 
-// Handlers
+// Handlers de los posts
 const {getPosts, createPost, getPost, addComment, deleteComment, addLike, removeLike, deletePost} = require("./handlers/posts");
-const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword} = require("./handlers/users");
+
+// Handlers de los usuarios
+const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword, changeEmail} = require("./handlers/users");
 
 // Middleware
 const {authMiddleware} = require("./middleware/auth");
@@ -54,6 +56,9 @@ app.post("/login", userLogin);
 
 // Cambiar la contraseña del usuario
 app.post("/change-password", authMiddleware, changePassword);
+
+// Cambiar el email del usuario
+app.post("/change-email", authMiddleware, changeEmail)
 
 // Actualizar el avatar del usuario
 app.post("/users/image", authMiddleware, uploadImg);
