@@ -5,7 +5,7 @@ const firestoreDB = require("./utilities/admin").firestore;
 const {getPosts, createPost, getPost, addComment, deleteComment, addLike, removeLike, deletePost} = require("./handlers/posts");
 
 // Handlers de los usuarios
-const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword, changeEmail} = require("./handlers/users");
+const {userSignup, userLogin, uploadImg, addUserDetails, getUserDetails, getSpecificUserDetails, markNotificationsRead, changePassword, changeEmail, deleteUserAccount} = require("./handlers/users");
 
 // Middleware
 const {authMiddleware} = require("./middleware/auth");
@@ -74,6 +74,9 @@ app.get("/user/:handle", getSpecificUserDetails);
 
 // Marcar notificaciones como leídas
 app.post("/notifications", authMiddleware, markNotificationsRead);
+
+// Eliminar cuenta de usuario
+app.post("/delete-account", authMiddleware, deleteUserAccount)
 
 
 //---------------------//

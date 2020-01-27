@@ -459,3 +459,66 @@ exports.markNotificationsRead = async (req, res) => {
     })
   }
 }
+
+// Handler para eliminar cuenta de usuario
+exports.deleteUserAccount = async (req, res) => {
+  try {
+    // Eliminar cuenta del usuario
+    await admin.auth().deleteUser(req.body.userId);
+
+    // Eliminar los posts del usuario
+    const postsPromises = [];
+    const userPostsSnapshot = await firestore.collection("posts").where("userHandle", "==", req.user.handle).get();
+    userPostsSnapshot.docs.forEach(doc => postsPromises.push(doc.ref.delete()));
+    await Promise.all(postsPromises);
+
+    // Eliminar los comentarios del usuario
+    const commentsPromises = [];
+    const userCommentsSnapshot = await firestore.collection("comments").where("userHandle", "==", req.user.handle).get();
+    userCommentsSnapshot.docs.forEach(doc => commentsPromises.push(doc.ref.delete()));
+    await Promise.all(commentsPromises);
+
+    // Eliminar las notificaciones enviadas por el usuario
+    const sentNotificationsPromises = [];
+    const sentNotificationsSnap = await firestore.collection("notifications").where("sender", "==", req.user.handle).get();
+    sentNotificationsSnap.docs.forEach(doc => sentNotificationsPromises.push(doc.ref.delete()));
+    await Promise.all(sentNotificationsPromises);
+
+    // Eliminar las notificaciones recibidas por el usuario
+    const receivedNotificationsPromises = [];
+    const receivedNotificationsSnap = await firestore.collection("notifications").where("recipient", "==", req.user.handle).get();
+    receivedNotificationsSnap.docs.forEach(doc => receivedNotificationsPromises.push(doc.ref.delete()));
+    await Promise.all(receivedNotificationsPromises);
+
+    // Si el usuario ya había actualizado su avatar, borrarlo del storage
+    const user = await firestore.collection("users").doc(req.user.handle).get();
+
+    if(user.data().avatarUpdateDate) {
+      // Extensión del avatar actual del usuario
+      const imageUrlArray = user.data().imageURL.split("?")[0].split(".");
+      const avatarExtension = imageUrlArray[imageUrlArray.length - 1];
+
+      // Nombre del avatar actual
+      const previousAvatarFilename = `user-${req.body.userId}-${user.data().avatarUpdateDate}.${avatarExtension}`;
+      
+      // Borrar el avatar del storage
+      await admin.storage().bucket().file(previousAvatarFilename).delete();
+    }
+
+    // Eliminar el perfil del usuario
+    await firestore.collection("users").doc(req.user.handle).delete();
+
+
+    return res.json({
+      status: "OK",
+      message: "User successfully deleted"
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      status: "failed",
+      message: "Internal server error",
+      error: error
+    })
+  }
+}
