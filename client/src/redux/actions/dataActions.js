@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, LOADING_USER_BY_HANDLE, GET_USER_BY_HANDLE} from "../types";
+import { LOADING_POSTS, GET_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, SET_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, DELETE_COMMENT, DELETING_COMMENT, LOADING_USER_BY_HANDLE, GET_USER_BY_HANDLE} from "../types";
 
 export const getPosts = () => {
   return async (dispatch) => {
@@ -192,7 +192,32 @@ export const createComment = (postId, body) => {
   }
 }
 
-// Actio para buscar el perfil de un usuario específico
+// Action para eliminar comentarios
+export const deleteComment = (commentId, postId) => {
+  return async (dispatch) => {
+    dispatch({type: DELETING_COMMENT, payload: true});
+
+    try {
+      const deletedComment = await axios({
+        method: "POST",
+        url: `/post/${postId}/comment/${commentId}`,
+        data: {
+          commentId,
+          postId
+        }
+      })
+
+      dispatch({type: DELETE_COMMENT, payload: deletedComment.data.data});
+      dispatch({type: DELETING_COMMENT, payload: false});
+
+    } catch (error) {
+      console.log(error, {...error});
+      dispatch({type: DELETING_COMMENT, payload: false});
+    }
+  }
+}
+
+// Action para buscar el perfil de un usuario específico
 export const getSpecificUser = (handle) => {
   return async (dispatch) => {
     dispatch({type: LOADING_USER_BY_HANDLE, payload: true});

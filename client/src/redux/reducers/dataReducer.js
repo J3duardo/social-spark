@@ -1,4 +1,4 @@
-import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, CLEAR_SELECTED_POST, GET_USER_BY_HANDLE, LOADING_USER_BY_HANDLE, CLEAR_SELECTED_USER } from "../types"
+import { GET_POSTS, LOADING_POSTS, LOADING_POSTS_ERROR, LIKE_POST, DISLIKE_POST, DELETE_POST, CREATE_POST, CREATING_POST, CLEAR_ERRORS, GET_POST, LOADING_POST, ADDING_COMMENT, ADD_COMMENT, DELETE_COMMENT, DELETING_COMMENT, CLEAR_SELECTED_POST, GET_USER_BY_HANDLE, LOADING_USER_BY_HANDLE, CLEAR_SELECTED_USER } from "../types"
 
 const initialState = {
   posts: [],
@@ -7,6 +7,7 @@ const initialState = {
   loadingSelectedUser: false,
   loading: false,
   loadingComment: false,
+  deletingComment: false,
   error: null
 }
 
@@ -114,6 +115,33 @@ export default (state = initialState, action) => {
         ...state,
         loadingComment: action.payload
       }
+    case DELETE_COMMENT:
+      const selectedPost = {...state.post};
+
+      // Remover el comentario del post
+      const selectedPostComments = [...selectedPost.comments];
+      const deletedCommentIndex = selectedPostComments.findIndex(comment => comment.id !== action.payload.id);
+      selectedPostComments.splice(deletedCommentIndex, 1);
+      selectedPost.comments = selectedPostComments;
+
+      // Actualizar contador de comentarios del post seleccionado
+      selectedPost.commentCount = selectedPost.commentCount - 1;
+
+      // Actualizar contador de comentarios en el array de posts
+      const allPosts = [...state.posts];
+      const selectedPostIndex = allPosts.findIndex(post => post.id === action.payload.postId);
+      allPosts[selectedPostIndex].commentCount -= 1; 
+
+      return {
+        ...state,
+        posts: allPosts,
+        post: selectedPost
+      }
+    case DELETING_COMMENT:
+      return {
+        ...state,
+        deletingComment: action.payload
+      } 
     case CREATING_POST:
     case LOADING_POST:
       return {
