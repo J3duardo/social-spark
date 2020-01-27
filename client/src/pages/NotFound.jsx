@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Container from "@material-ui/core/Container";
@@ -22,6 +22,10 @@ const styles = {
 }
 
 const NotFound = (props) => {
+  useEffect(() => {
+    document.title = "Social Spark | Not Found"
+  }, []);
+  
   return (
     <Container maxWidth="sm">
       <Paper className={props.classes.paper}>

@@ -40,7 +40,9 @@ const styles = (theme) => ({
 })
 
 class Home extends Component {
+  
   componentDidMount() {
+    document.title = "Social Spark | Home";
     this.props.getPosts()
   }
 

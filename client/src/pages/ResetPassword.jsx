@@ -52,6 +52,10 @@ class ResetPassword extends Component {
     }
   }
 
+  componentDidMount() {
+    document.title = "Social Spark | Reset Password"
+  }
+
   componentWillUnmount() {
     this.setState({
       email: "",

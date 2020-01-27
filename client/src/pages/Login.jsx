@@ -43,6 +43,10 @@ class Login extends Component {
     password: ""
   }
 
+  componentDidMount() {
+    document.title = "Social Spark | Login";
+  }
+
   componentWillUnmount() {
     if(this.props.errors) {
       this.props.clearErrors()

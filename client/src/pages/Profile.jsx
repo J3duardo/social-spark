@@ -72,6 +72,8 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    document.title = "Social Spark | Account Settings";
+    
     if(!this.props.auth) {
       this.props.history.push("/")
     }

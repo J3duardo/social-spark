@@ -37,6 +37,7 @@ const styles = {
 
 class PostPage extends Component {
   componentDidMount() {
+    document.title = "Social Spark | Post"
     this.props.getPost(this.props.match.params.postId)
   }
 

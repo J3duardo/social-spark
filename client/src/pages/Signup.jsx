@@ -48,6 +48,10 @@ class Signup extends Component {
     location: ""
   }
 
+  componentDidMount() {
+    document.title = "Social Spark | Signup"
+  }
+
   componentWillUnmount() {
     if(this.props.errors) {
       this.props.clearErrors()

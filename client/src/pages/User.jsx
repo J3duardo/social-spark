@@ -24,16 +24,22 @@ const styles = {
   }
 }
 
-export class User extends Component {
-  async componentDidMount() {
+class User extends Component {
+  componentDidMount() {    
     // Cargar el perfil
     this.props.getSelectedUser(this.props.match.params.handle);
   }
-
+  
   componentDidUpdate(prevProps) {
     // Cargar el perfil al cambiar la ruta desde la misma página
     if(prevProps.match.params.handle !== this.props.match.params.handle) {
-      this.props.getSelectedUser(this.props.match.params.handle)
+      this.props.getSelectedUser(this.props.match.params.handle);
+    }
+    
+    // Actualizar el title de la página con el handle del usuario
+    if(prevProps.selectedUser !== this.props.selectedUser) {
+      console.log(this.props.selectedUser);
+      document.title = `Social Spark | ${this.props.selectedUser.user.handle}`;
     }
   }
 
