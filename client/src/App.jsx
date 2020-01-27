@@ -21,6 +21,8 @@ import store from "./redux/store";
 import {logoutUser, getUserData} from "./redux/actions/userActions";
 import axios from "axios";
 
+axios.defaults.baseURL = "https://us-central1-social-spark.cloudfunctions.net/api"
+
 const theme = createMuiTheme({
   palette: {
     primary: {
