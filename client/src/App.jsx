@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import ResetPassword from "./pages/ResetPassword";
 import NavBar from "./components/NavBar";
 import User from "./pages/User";
+import Profile from "./pages/Profile";
 import PostPage from "./pages/PostPage";
 import NotFound from "./pages/NotFound";
 
@@ -81,6 +82,7 @@ const App = () => {
                 <AuthRoute exact path="/login" component={Login} />
                 <AuthRoute exact path="/signup" component={Signup} />
                 <AuthRoute exact path="/reset-password" component={ResetPassword} />
+                <Route exact path="/profile" component={Profile} />
                 <Route exact path="/user/:handle" component={User}/>
                 <Route exact path="/user/:handle/post/:postId" component={PostPage}/>
                 <Route path="/*" component={NotFound}/>
