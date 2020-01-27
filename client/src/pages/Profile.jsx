@@ -16,6 +16,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import {connect} from "react-redux";
+import {logoutUser} from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   formWrapper: {
@@ -59,6 +60,9 @@ class Profile extends Component {
     emailUpdated: false,
     loadingPassword: false,
     loadingEmail: false,
+    deleteAccountPassword: "",
+    loadingAccountDeletion: false,
+    accountDeleted: false,
     showModal: false,
     error: {
       status: false,
@@ -326,8 +330,81 @@ class Profile extends Component {
     }
   }
 
+  submitDeleteAccountHandler = async (e) => {
+    e.preventDefault();
+    try {
+      this.setState({
+        loadingAccountDeletion: true
+      });
+
+      // Chequear si se introdujo la contraseña
+      if(this.state.deleteAccountPassword === "") {
+        return this.setState({
+          loadingAccountDeletion: false,
+          showModal: false,
+          error: {
+            status: true,
+            type: "deleteAccountPassword",
+            message: "Password is required"
+          }
+        })
+      }
+
+      // Chequear si la contraseña es válida
+      await axios({
+        method: "POST",
+        url: "/login",
+        data: {
+          email: this.props.userEmail,
+          password: this.state.deleteAccountPassword
+        }
+      })
+
+      // Eliminar la cuenta y toda la información del usuario
+      await axios({
+        method: "POST",
+        url: "/delete-account",
+        data: {
+          userId: this.props.uid
+        }
+      });
+
+      return this.setState({
+        deleteAccountPassword: "",
+        loadingAccountDeletion: false,
+        showModal: true,
+        accountDeleted: true
+      }, () => this.props.signOut())
+
+    } catch (error) {
+      if(error.response.data && typeof error.response.data.data === "string") {
+        return this.setState({
+          loadingAccountDeletion: false,
+          showModal: false,
+          error: {
+            status: true,
+            type: "deleteAccountPassword",
+            message: error.response.data.data.includes("password") ? "Wrong password" : error.response.data.message
+          }
+        })
+      }
+
+      this.setState({
+        loadingAccountDeletion: false,
+        showModal: false,
+        error: {
+          error: {
+            status: true,
+            type: "submitDeleteAccountPassword",
+            message: error.message
+          }
+        }
+      })
+    }
+  }
+
   render() {
-    const {error, loadingPassword, loadingEmail, showModal} = this.state;
+    const {error, loadingPassword, loadingEmail, showModal, loadingAccountDeletion, accountDeleted} = this.state;
     const {classes} = this.props;
 
     return (
@@ -402,7 +479,7 @@ class Profile extends Component {
         </Paper>
 
         {/* Formulario para actulizar el email */}
-        <Paper variant="outlined">
+        <Paper variant="outlined" style={{marginBottom: "1rem"}}>
           <Grid container className={classes.form}>
             <Grid item style={{width: "100%", padding: "0 1rem"}}>
               <Typography variant="h5" className={classes.pageTitle}>Change your Email</Typography>
@@ -457,6 +534,53 @@ class Profile extends Component {
           </Grid>
         </Paper>
 
+        {/* Eliminar cuenta de usuario */}
+        <Paper variant="outlined">
+        <Grid container className={classes.form}>
+            <Grid item style={{width: "100%", padding: "0 1rem"}}>
+              <Typography variant="h5" className={classes.pageTitle}>Delete your account</Typography>
+              <Typography variant="body2" color="secondary" style={{marginBottom: "1rem"}}>
+                This process is irreversible and all your data, including posts and comments, will be permanently removed.
+              </Typography>
+              <form noValidate onSubmit={this.submitDeleteAccountHandler}>
+                <TextField
+                  id="deleteAccountPassword"
+                  name="deleteAccountPassword"
+                  type="password"
+                  label="Your password"
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.deleteAccountPassword}
+                  onChange={this.onChangeHandler}
+                  helperText={`${error.type === "deleteAccountPassword" ? error.message : ""}`}
+                  error={error.type === "deleteAccountPassword" ? true : false}
+                />
+                {error.type === "submitDeleteAccountPassword" &&
+                  <Typography variant="body2" className={classes.generalError}>
+                    {error.message}
+                  </Typography>
+                }
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  disabled={loadingAccountDeletion}
+                >
+                  Submit
+                  {loadingAccountDeletion &&
+                    <CircularProgress
+                      size="1.5rem"
+                      thickness={6}
+                      className={classes.progress}
+                    />
+                  }
+                </Button>
+              </form>
+            </Grid>
+          </Grid>
+        </Paper>
+
         {/* Modal para informar operación exitosa */}
         <Dialog
           open={showModal}
@@ -469,6 +593,7 @@ class Profile extends Component {
             <DialogContentText id="alert-dialog-description">
               {this.state.passwordUpdated && "Your Password has been successfully updated"}
               {this.state.emailUpdated && "Your Email has been successfully updated"}
+              {this.state.accountDeleted && "Your Account has been successfully removed. We will miss you!"}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -490,4 +615,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(Profile));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signOut: () => {
+      dispatch(logoutUser())
+    }
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Profile));
