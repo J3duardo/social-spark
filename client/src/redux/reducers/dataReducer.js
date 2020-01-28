@@ -93,22 +93,26 @@ export default (state = initialState, action) => {
       }
     case ADD_COMMENT:
       // Actualizar el post seleccionado
-      const updatedPost = {...state.post};
-      updatedPost.comments = [action.payload, ...updatedPost.comments];
-      updatedPost.commentCount = updatedPost.commentCount + 1;
-
-      // Actualizar el post en el array de posts
-      const posts = [...state.posts];
-      const updatedPostIndex = posts.findIndex(post => post.id === action.payload.postId);
-      const postToUpdate = posts[updatedPostIndex];
-
-      postToUpdate.commentCount = postToUpdate.commentCount + 1
-      posts.splice(updatedPostIndex, 1, postToUpdate);
-
-      return {
-        ...state,
-        post: updatedPost,
-        posts: posts
+      if(Object.keys(state.post).length > 0) {
+        const updatedPost = {...state.post};
+        updatedPost.comments = [action.payload, ...updatedPost.comments];
+        updatedPost.commentCount += 1;
+  
+        // Actualizar el post en el array de posts
+        const posts = [...state.posts];
+        const updatedPostIndex = posts.findIndex(post => post.id === action.payload.postId);
+        const postToUpdate = posts[updatedPostIndex];
+  
+        postToUpdate.commentCount = postToUpdate.commentCount + 1
+        posts.splice(updatedPostIndex, 1, postToUpdate);
+  
+        return {
+          ...state,
+          post: updatedPost,
+          posts: posts
+        }
+      } else {
+        return state
       }
     case ADDING_COMMENT:
       return {

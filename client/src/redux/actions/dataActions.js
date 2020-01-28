@@ -165,7 +165,7 @@ export const createComment = (postId, body) => {
       });
 
       dispatch({type: ADDING_COMMENT, payload: false});
-      dispatch({type: ADD_COMMENT, payload: response.data.data});
+      // dispatch({type: ADD_COMMENT, payload: response.data.data});
 
     } catch (error) {
       if(error.response && error.response.data.message.includes("not found")) {
@@ -207,8 +207,8 @@ export const deleteComment = (commentId, postId) => {
         }
       })
 
-      dispatch({type: DELETE_COMMENT, payload: deletedComment.data.data});
       dispatch({type: DELETING_COMMENT, payload: false});
+      // dispatch({type: DELETE_COMMENT, payload: deletedComment.data.data});
 
     } catch (error) {
       console.log(error, {...error});

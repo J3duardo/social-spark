@@ -43,7 +43,6 @@ class Home extends Component {
   
   componentDidMount() {
     document.title = "Social Spark | Home";
-    this.props.getPosts()
   }
 
   render() {
