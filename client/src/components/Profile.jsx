@@ -20,18 +20,31 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import {uploadImage} from "../redux/actions/userActions";
 
-const styles = {
+const styles = (theme) => ({
   paper: {
     padding: 20
   },
   progressWrapper: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     minHeight: "60vh"
-    // padding: "2rem"
   },
   profile: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+
+    [theme.breakpoints.down(1050)]: {
+      flexDirection: "row",
+    },
+
+    [theme.breakpoints.down(700)]: {
+      flexDirection: "column",
+    },
+
     "& .image-wrapper": {
       textAlign: "center"
     },
@@ -40,9 +53,13 @@ const styles = {
       width: "100%",
       maxWidth: 200,
       height: 200,
-      margin: "0 auto",
+      marginRight: "1rem",
       padding: "0 1.1rem 1.1rem 0",
       borderRadius: "50%",
+
+      [theme.breakpoints.down(700)]: {
+        marginRight: 0
+      },
       
       "& img": {
         display: "block",
@@ -54,6 +71,9 @@ const styles = {
       }
     },
     "& .profile-details": {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
       textAlign: "center",
       "& span, svg": {
         verticalAlign: "middle"
@@ -83,7 +103,7 @@ const styles = {
       margin: "20px 10px"
     }
   }
-}
+})
 
 class Profile extends Component {  
   avatarUploadHandler = (e) => {
@@ -171,8 +191,8 @@ class Profile extends Component {
                 <Typography variant="body2">
                   <CalendarToday color="primary" /> Joined: {moment(user.credentials.createdAt).calendar()}
                 </Typography>
+                <EditProfile />
               </div>
-              <EditProfile />
             </div>
           </Paper>
         }

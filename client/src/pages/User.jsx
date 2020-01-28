@@ -6,14 +6,46 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
+import PostAddOutlined from "@material-ui/icons/PostAddOutlined";
 
 import {connect} from "react-redux";
 import {getSpecificUser} from "../redux/actions/dataActions";
 import { CLEAR_SELECTED_USER } from "../redux/types";
 
-const styles = {
+const styles = (theme) => ({
   gridContainer: {
-    padding: "0 24px"
+    flexDirection: "row",
+    padding: "0 24px",
+    [theme.breakpoints.down(1050)]: {
+      flexDirection: "column",
+      width: "100%"
+    }
+  },
+  userPostsTitle: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "1rem",
+
+    [theme.breakpoints.down(1050)]: {
+      textAlign: "center"
+    }
+  },
+  posts: {
+    flexBasis: "66.7%",
+    order: 1,
+    [theme.breakpoints.down(1050)]: {
+      flexGrow: 1,
+      order: 2
+    }
+  },
+  profile: {
+    flexBasis: "33.3%",
+    order: 2,
+    [theme.breakpoints.down(1050)]: {
+      flexGrow: 1,
+      order: 1,
+      marginBottom: "1rem"
+    }
   },
   loaderWrapper: {
     display: "flex",
@@ -22,7 +54,7 @@ const styles = {
     minHeight: "60vh",
     padding: "2rem"
   }
-}
+})
 
 class User extends Component {
   componentDidMount() {    
@@ -38,7 +70,6 @@ class User extends Component {
     
     // Actualizar el title de la página con el handle del usuario
     if(prevProps.selectedUser !== this.props.selectedUser) {
-      console.log(this.props.selectedUser);
       document.title = `Social Spark | ${this.props.selectedUser.user.handle}`;
     }
   }
@@ -69,10 +100,14 @@ class User extends Component {
     return (
       <div className={this.props.classes.wrapper}>
         <Grid container spacing={2} className={this.props.classes.gridContainer}>
-          <Grid item sm={8} xs={12}>
+          <Grid item className={this.props.classes.posts}>
+            <Typography variant="h6" className={this.props.classes.userPostsTitle}>
+              <PostAddOutlined fontSize="large" color="primary" style={{marginRight: "10px"}}/>
+              <span>Posts from {this.props.match.params.handle.split(" ")[0]}</span>
+            </Typography>
             {renderPosts()}
           </Grid>
-          <Grid item sm={4} xs={12}>
+          <Grid className={this.props.classes.profile}>
             {selectedUser && <StaticProfile profile={selectedUser.user} />}
             {loading &&
               <Paper className={this.props.classes.loaderWrapper}>

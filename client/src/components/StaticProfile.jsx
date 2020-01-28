@@ -10,7 +10,7 @@ import CalendarToday from "@material-ui/icons/CalendarToday";
 import LocationIcon from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 
-const styles = {
+const styles = (theme) => ({
   paper: {
     padding: 20
   },
@@ -21,6 +21,18 @@ const styles = {
     padding: "2rem"
   },
   profile: {
+    display: "flex",
+    flexDirection: "column",
+
+    [theme.breakpoints.down(1050)]: {
+      width: "100%",
+      flexDirection: "row",
+    },
+
+    [theme.breakpoints.down(700)]: {
+      flexDirection: "column",
+    },
+
     "& .image-wrapper": {
       textAlign: "center"
     },
@@ -61,7 +73,7 @@ const styles = {
   avatarInput: {
     display: "none"
   }
-}
+})
 
 const StaticProfile = (props) => {
   const {classes, profile} = props;
