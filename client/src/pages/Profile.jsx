@@ -466,7 +466,7 @@ class Profile extends Component {
                   className={classes.button}
                   disabled={loadingPassword}
                 >
-                  Submit
+                  Update password
                   {loadingPassword &&
                     <CircularProgress
                       size="1.5rem"
@@ -522,7 +522,7 @@ class Profile extends Component {
                   className={classes.button}
                   disabled={loadingEmail}
                 >
-                  Submit
+                  Update email
                   {loadingEmail &&
                     <CircularProgress
                       size="1.5rem"
@@ -565,11 +565,11 @@ class Profile extends Component {
                 <Button
                   type="submit"
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   className={classes.button}
                   disabled={loadingAccountDeletion}
                 >
-                  Submit
+                  Delete account
                   {loadingAccountDeletion &&
                     <CircularProgress
                       size="1.5rem"

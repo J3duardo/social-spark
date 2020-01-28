@@ -54,7 +54,6 @@ class PostPage extends Component {
 
   render() {
     const {classes, loading, post, comments} = this.props;
-    console.log(comments)
 
     return (
       <React.Fragment>

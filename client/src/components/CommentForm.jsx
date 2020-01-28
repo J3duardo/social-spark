@@ -68,6 +68,7 @@ export class CommentForm extends Component {
               name="body"
               type="text"
               label="Add comment"
+              multiline
               error={errors && errors.comment ? true : false}
               helperText={errors && errors.comment}
               onChange={this.onChangeHandler}
@@ -89,7 +90,7 @@ export class CommentForm extends Component {
                   className={classes.progress}
                 />
               }
-              Submit
+              Add comment
             </Button>
           </form>
           <br className={classes.dividerInvisible}/>
