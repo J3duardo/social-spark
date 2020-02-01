@@ -17,16 +17,28 @@ import ChatIcon from "@material-ui/icons/Chat";
 import {connect} from "react-redux";
 import {markNotificationsRead} from "../redux/actions/userActions";
 
-const styles = {
-  "navIcon": {
-    color: "#fff"
+const styles = (theme) => ({
+  whiteIcon: {
+    color: "#fff",
+
+    [theme.breakpoints.down(550)]: {
+      color: "rgb(125, 125, 125)"
+    }
   }
-}
+})
 
 class Notifications extends Component {
   state = {
     anchorEl: null,
     newNotification: false
+  }
+
+  componentDidUpdate(prevProps) {
+    if(window.innerWidth < 550 && prevProps.showNotificationsMobile !== this.props.showNotificationsMobile) {
+      this.setState({
+        anchorEl: this.props.showNotificationsMobile
+      })
+    }
   }
 
   unsubscribeFromNotifications = null;
@@ -45,6 +57,10 @@ class Notifications extends Component {
   }
 
   closeNotificationsHandler = () => {
+    if(window.innerWidth < 550) {
+      this.props.closeNotificationsMobile();
+    }
+
     this.setState({
       anchorEl: null,
       newNotification: false
@@ -109,7 +125,7 @@ class Notifications extends Component {
             horizontal: "right",
           }}
         >
-          <NotificationsIcon className={this.props.classes.navIcon} />
+          <NotificationsIcon className={this.props.classes.whiteIcon} />
         </Badge>
       )
     }
