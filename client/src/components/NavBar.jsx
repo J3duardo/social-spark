@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {Link} from "react-router-dom";
 import GenericIconButton from "./GenericIconButton";
 import CreatePost from "./CreatePost";
+import MobileNav from "./MobileNav";
 
 import {withStyles} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -20,7 +21,7 @@ import {firestore} from "../firebase-client";
 import {connect} from "react-redux";
 import {logoutUser, updateNotifications} from "../redux/actions/userActions";
 
-const styles = {
+const styles = (theme) => ({
   toolBar: {
     display: "flex",
     width: "100%",
@@ -30,6 +31,13 @@ const styles = {
   navBarTitle: {
     flexGrow: "1",
     color: "inherit"
+  },
+  menuItems: {
+    display: "flex",
+
+    [theme.breakpoints.down(550)]: {
+      display: "none"
+    },
   },
   navbarProfileBtn: {
     display: "flex",
@@ -42,15 +50,19 @@ const styles = {
       backgroundColor: "#962502"
     }
   },
-  "navIcon": {
+  whiteIcon: {
     color: "#fff"
   },
   circularProgressWrapper: {
     minWidth: "250px",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+
+    [theme.breakpoints.down(550)]: {
+      display: "none"
+    }
   }
-}
+})
 
 class NavBar extends Component {
   unsubscribeFromNotifications = null;
@@ -90,55 +102,58 @@ class NavBar extends Component {
               <CircularProgress size={30} style={{color: "#fff"}} />
             </div>
           }
-          {!this.props.auth && !this.props.loadingUi &&
-            <React.Fragment>
-              <Button color="inherit" component={Link} to="/login">Login</Button>
-              <Button className={this.props.classes.orangeBtn} color="inherit" component={Link} to="/signup">Signup</Button>
-            </React.Fragment>
-          }
-          {this.props.auth && !this.props.loadingUi &&
-            <React.Fragment>
-              <CreatePost />
-              <Link to="/">
-                <GenericIconButton tipTitle="Home">
-                  <HomeIcon className={this.props.classes.navIcon} />
-                </GenericIconButton>
-              </Link>
-              <Notifications />
-              <Tooltip title="Your account settings">
-                <Button
-                  className={this.props.classes.navbarProfileBtn}
-                  color="inherit"
-                  component={Link}
-                  to="/profile"
-                >
-                  <div
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      marginRight: "5px",
-                      borderRadius: "50%",
+          <MobileNav />
+          <div className={this.props.classes.menuItems}>
+            {!this.props.auth && !this.props.loadingUi &&
+              <React.Fragment>
+                <Button color="inherit" component={Link} to="/login">Login</Button>
+                <Button className={this.props.classes.orangeBtn} color="inherit" component={Link} to="/signup">Signup</Button>
+              </React.Fragment>
+            }
+            {this.props.auth && !this.props.loadingUi &&
+              <React.Fragment>
+                <CreatePost />
+                <Link to="/">
+                  <GenericIconButton tipTitle="Home">
+                    <HomeIcon className={this.props.classes.whiteIcon} />
+                  </GenericIconButton>
+                </Link>
+                <Notifications />
+                <Tooltip title="Your account settings">
+                  <Button
+                    className={this.props.classes.navbarProfileBtn}
+                    color="inherit"
+                    component={Link}
+                    to="/profile"
+                  >
+                    <div
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        marginRight: "5px",
+                        borderRadius: "50%",
 
-                      backgroundImage: `url(${this.props.user.imageURL})`,
-                      backgroundPosition: "center center",
-                      backgroundSize: "cover"
-                    }}
-                  />
-                  {/* <span>{this.props.user.handle.split(" ")[0]}</span> */}
-                  <span>Settings</span>
+                        backgroundImage: `url(${this.props.user.imageURL})`,
+                        backgroundPosition: "center center",
+                        backgroundSize: "cover"
+                      }}
+                    />
+                    {/* <span>{this.props.user.handle.split(" ")[0]}</span> */}
+                    <span>Settings</span>
+                  </Button>
+                </Tooltip>
+                <Button
+                  style={{marginLeft: "5px"}}
+                  className={this.props.classes.orangeBtn}
+                  color="inherit"
+                  component="div"
+                  onClick={() => this.props.signout()}
+                >
+                  Signout
                 </Button>
-              </Tooltip>
-              <Button
-                style={{marginLeft: "5px"}}
-                className={this.props.classes.orangeBtn}
-                color="inherit"
-                component="div"
-                onClick={() => this.props.signout()}
-              >
-                Signout
-              </Button>
-            </React.Fragment>
-          }
+              </React.Fragment>
+            }
+          </div>
         </Toolbar>
       </AppBar>
     );
