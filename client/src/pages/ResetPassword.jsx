@@ -15,6 +15,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
+  formContainer: {
+    ...theme.formContainer
+  },
   form: {
     ...theme.form
   },
@@ -145,72 +148,74 @@ class ResetPassword extends Component {
     const {error, loading} = this.state;
 
     return (
-      <Grid container className={classes.form}>
-        <Grid item style={{padding: "0 1rem"}}>
-          <div className={classes.socialIconContainer}>
-            <img className={classes.socialIcon} src="/img/social-icon.png" alt="social logo"/>
-          </div>
-          <Typography variant="h4" className={classes.pageTitle}>Reset your password</Typography>
-          <Typography color="textSecondary" variant="body1" style={{marginBottom: "1rem"}}>
-            We will send you an email with instructions to reset your password
-          </Typography>
-          <form noValidate onSubmit={this.submitHandler}>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              fullWidth
-              className={classes.textField}
-              value={this.state.email}
-              onChange={this.onChangeHandler}
-              helperText={`${error.status && error.type === "email" ? error.message : ""}`}
-              error={error.status && error.type === "email" ? true : false}
-            />
-            {error.status && error.type === "submit" &&
-              <Typography variant="body2" className={classes.generalError}>
-                {error.message}
-              </Typography>
-            }
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={loading}
-            >
-              Submit
-              {loading &&
-                <CircularProgress
-                  size="1.5rem"
-                  thickness={6}
-                  className={classes.progress}
-                />
+      <div className={classes.formContainer}>
+        <Grid container className={classes.form}>
+          <Grid item style={{width: "100%"}}>
+            <div className={classes.socialIconContainer}>
+              <img className={classes.socialIcon} src="/img/social-icon.png" alt="social logo"/>
+            </div>
+            <Typography variant="h4" className={classes.pageTitle}>Reset your password</Typography>
+            <Typography color="textSecondary" variant="body1" style={{marginBottom: "1rem"}}>
+              We will send you an email with instructions to reset your password
+            </Typography>
+            <form noValidate onSubmit={this.submitHandler}>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                fullWidth
+                className={classes.textField}
+                value={this.state.email}
+                onChange={this.onChangeHandler}
+                helperText={`${error.status && error.type === "email" ? error.message : ""}`}
+                error={error.status && error.type === "email" ? true : false}
+              />
+              {error.status && error.type === "submit" &&
+                <Typography variant="body2" className={classes.generalError}>
+                  {error.message}
+                </Typography>
               }
-            </Button>
-          </form>
-        </Grid>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={loading}
+              >
+                Submit
+                {loading &&
+                  <CircularProgress
+                    size="1.5rem"
+                    thickness={6}
+                    className={classes.progress}
+                  />
+                }
+              </Button>
+            </form>
+          </Grid>
 
-        {/* Dialog */}
-        <Dialog
-          open={this.state.success}
-          onClose={this.closeDialogHandler}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Email sent. Check your inbox.</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              We just sent you an email with instructions to reset your password, please check your inbox. In case you don't find it, check your spam folder or try again.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.closeDialogHandler} color="primary">
-              Ok
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Grid>
+          {/* Dialog */}
+          <Dialog
+            open={this.state.success}
+            onClose={this.closeDialogHandler}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">Email sent. Check your inbox.</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                We just sent you an email with instructions to reset your password, please check your inbox. In case you don't find it, check your spam folder or try again.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.closeDialogHandler} color="primary">
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Grid>
+      </div>
     );
   }
 }

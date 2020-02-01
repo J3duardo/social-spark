@@ -42,6 +42,11 @@ const theme = createMuiTheme({
       contrastText: "#fff"
     }
   },
+  formContainer: {
+    width: "90%",
+    maxWidth: "500px",
+    margin: "0 auto"
+  },
   form: {
     justifyContent: "center",
     textAlign: "center"
