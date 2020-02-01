@@ -15,12 +15,15 @@ import {connect} from "react-redux";
 import {createPost} from "../redux/actions/dataActions";
 import {CLEAR_ERRORS} from "../redux/types";
 
-const styles = {
+const styles = (theme) => ({
   postDialog: {
     position: "relative"
   },
   whiteIcon: {
-    color: "#fff"
+    color: "#fff",
+    [theme.breakpoints.down(550)]: {
+      color: "rgb(125, 125, 125)"
+    }
   },
   closeIcon: {
     position: "absolute",
@@ -34,7 +37,7 @@ const styles = {
   progress: {
     position: "absolute"
   },
-}
+})
 
 class CreatePost extends Component {
   state = {
@@ -43,19 +46,33 @@ class CreatePost extends Component {
     errors: {}
   }
 
+  componentDidUpdate(prevProps) {
+    if(window.innerWidth < 550 && prevProps.showOnMobile !== this.props.showOnMobile) {
+      this.setState({
+        open: this.props.showOnMobile
+      })
+    }
+  }
+
   openDialogHandler = () => {
-    this.setState({
-      open: true
-    })
+    if(window.innerWidth >= 550) {
+      this.setState({
+        open: true
+      })
+    }
   }
 
   closeDialogHandler = () => {
+    if(window.innerWidth < 550) {
+      this.props.closeModal();
+    }
+
     this.setState({
       open: false,
       body: ""
     });
 
-    this.props.clearErrors()
+    this.props.clearErrors();
   }
 
   onChangeHandler = (e) => {
@@ -82,7 +99,7 @@ class CreatePost extends Component {
     return (
       <React.Fragment>
         <GenericIconButton tipTitle="Create post" onClick={this.openDialogHandler}>
-          <AddIcon className={classes.whiteIcon} />
+          <AddIcon className={classes.whiteIcon}/>
         </GenericIconButton>
         <Dialog
           open={this.state.open}
