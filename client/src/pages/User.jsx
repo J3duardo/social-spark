@@ -24,7 +24,8 @@ const styles = (theme) => ({
   userPostsTitle: {
     display: "flex",
     alignItems: "center",
-    marginBottom: "1rem",
+    justifyContent: "center",
+    margin: "0.5rem 0 1rem 0",
 
     [theme.breakpoints.down(1050)]: {
       textAlign: "center"
@@ -41,6 +42,7 @@ const styles = (theme) => ({
   profile: {
     flexBasis: "33.3%",
     order: 2,
+    padding: "8px",
     [theme.breakpoints.down(1050)]: {
       flexGrow: 1,
       order: 1,
@@ -101,6 +103,7 @@ class User extends Component {
       <div className={this.props.classes.wrapper}>
         <Grid container spacing={2} className={this.props.classes.gridContainer}>
           <Grid item className={this.props.classes.posts}>
+            <hr/>
             <Typography variant="h6" className={this.props.classes.userPostsTitle}>
               <PostAddOutlined fontSize="large" color="primary" style={{marginRight: "10px"}}/>
               <span>Posts from {this.props.match.params.handle.split(" ")[0]}</span>

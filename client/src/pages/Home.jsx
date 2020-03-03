@@ -22,8 +22,10 @@ const styles = (theme) => ({
   },
   userPostsTitle: {
     display: "flex",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: "1rem",
+    textAlign: "center",
+    margin: "0.5rem 0 1rem 0",
 
     [theme.breakpoints.down(1050)]: {
       textAlign: "center"
@@ -79,6 +81,7 @@ class Home extends Component {
       <div className={this.props.classes.wrapper}>
         <Grid container spacing={2} className={this.props.classes.gridContainer}>
           <Grid item className={this.props.classes.posts}>
+            <hr/>
             <Typography variant="h6" className={this.props.classes.userPostsTitle}>
               <PostAddOutlined fontSize="large" color="primary" style={{marginRight: "10px"}}/>
               <span>Posts</span>
