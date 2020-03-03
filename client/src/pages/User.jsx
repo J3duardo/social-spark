@@ -16,6 +16,8 @@ const styles = (theme) => ({
   gridContainer: {
     flexDirection: "row",
     padding: "0 24px",
+    margin: "0",
+    width: "auto",
     [theme.breakpoints.down(1050)]: {
       flexDirection: "column",
       width: "100%"
