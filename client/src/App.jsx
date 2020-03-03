@@ -24,6 +24,7 @@ import axios from "axios";
 
 import {ADD_COMMENT, DELETE_COMMENT} from "./redux/types";
 import {getPosts} from "./redux/actions/dataActions";
+import Footer from "./components/Footer";
 
 axios.defaults.baseURL = "https://us-central1-social-spark.cloudfunctions.net/api"
 
@@ -119,6 +120,7 @@ const App = () => {
                 <Route path="/*" component={NotFound}/>
               </Switch>
             </div>
+            <Footer />
           </BrowserRouter>
         </div>
       </MuiThemeProvider>
